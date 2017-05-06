@@ -1,8 +1,14 @@
 var inquirer = require("inquirer");
 var Player = require("./player.js");
+var db = require("../../models");
 
 
 // --------------- Will be in Database -------------------------
+
+db.Item.create(
+    {"name": "Lazer",
+    "bonus":3}).then(function (dbItems) {});
+
 var test = [];
 var num1 = new itemCard(1, 'Lazer', 'Weapon', 3, true, false);
 var num2 = new itemCard(2, 'Battleship', 'Ship', 10, true, false);

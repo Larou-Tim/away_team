@@ -1,5 +1,3 @@
-
-
 var Player = function (name) {
     this.playerName = name;
     this.level = 1;
@@ -15,11 +13,9 @@ var Player = function (name) {
         var cardNumber = deck.shift();
 
         //query DB
-        var cardIndex = findWithAttr(test, "itemNumber", cardNumber);
-        var card = test[cardIndex];
-
-
-        this.hand.push(card);
+        // var cardIndex = findWithAttr(test, "itemNumber", cardNumber);
+        // var card = test[cardIndex];
+        // this.hand.push(card);
     }
     this.addItem = function (number) {
         var itemIndex = findWithAttr(itemDeck, itemNumber, number);
@@ -40,6 +36,7 @@ var Player = function (name) {
         console.log(this.hand);
     }
 }
+
 function findWithAttr(array, attr, value) {
     for (var i = 0; i < array.length; i += 1) {
         if (array[i][attr] === value) {
