@@ -3,7 +3,7 @@
     "username": "root",
     "password": "M..7608891648",
     "database": "away_team",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {

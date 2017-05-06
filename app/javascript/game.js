@@ -2,32 +2,39 @@ var inquirer = require("inquirer");
 var Player = require("./player.js");
 var db = require("../../models");
 
+db.sequelize.sync({ force: false }).then(function() {
+
+});
 
 // --------------- Will be in Database -------------------------
 
 db.Item.create(
-    {"name": "Lazer",
+    {"name": "LazOr",
     "bonus":3}).then(function (dbItems) {});
 
-var test = [];
-var num1 = new itemCard(1, 'Lazer', 'Weapon', 3, true, false);
-var num2 = new itemCard(2, 'Battleship', 'Ship', 10, true, false);
-var num3 = new itemCard(3, 'Holofield', 2, 'Armor', true, false);
-var num4 = new itemCard(4, 'Crazy Driod', 5, 'Aide', true, false);
-var num5 = new itemCard(5, 'Lacky', 2, 'Aide', true, false);
-var num6 = new itemCard(6, 'Smuggler', 4, 'Ship', true, false);
-var num7 = new itemCard(7, 'bfg', 2, 'Weapon', true, false);
-var num8 = new itemCard(0, 'Force Field', 4, 'Armor', true, false);
+db.Item.create(
+    {"name": "Battleship",
+    "bonus":10}).then(function (dbItems) {});
 
-test.push(num1);
-test.push(num2);
-test.push(num3);
-test.push(num4);
-test.push(num5);
-test.push(num6);
-test.push(num7);
-test.push(num8);
+db.Item.create(
+    {"name": "Crzy Driod",
+    "bonus":5}).then(function (dbItems) {});
 
+db.Item.create(
+    {"name": "Lacky",
+    "bonus":2}).then(function (dbItems) {});
+
+db.Item.create(
+    {"name": "Smuggler",
+    "bonus":4}).then(function (dbItems) {});
+
+db.Item.create(
+    {"name": "bfg",
+    "bonus":6}).then(function (dbItems) {});
+
+db.Item.create(
+    {"name": "Force Field",
+    "bonus":4}).then(function (dbItems) {});
 
 var baddie = new doorCard(0, "monster", 'One Eye', "He's evil", 2);
 
@@ -75,7 +82,7 @@ function shuffleDeck(cards, deck) {
     // }
     // console.log(cardsOut);
 
-    for (var i = 0; i < cards; i++) {
+    for (var i = 1; i < cards; i++) {
         // var index = cardsOut.indexOf(i);
         // if (index == -1) {
         deck.push(i);
@@ -174,7 +181,7 @@ function showOut() {
 function playCard() {
     var choiceArray = [];
     for (var i = 0; i < player.hand.length; i++) {
-        choiceArray.push(player.hand[i].itemName);
+        choiceArray.push(player.hand[i].name);
     }
     choiceArray.push('Return');
 
@@ -208,7 +215,7 @@ function awayMission() {
     var cardIndex = findWithAttr(baddieDeck, "cardNumber", cardNumber);
     var card = baddieDeck[cardIndex];
     var baddieLevel = card.effect
-    var playerEffectiveLevel = player.calcEffectiveLevel()
+    var playerEffectiveLevel = player.calcEffectiveLevel();
 
     console.log("You are fighting", card.name, "Which is level", baddieLevel);
     console.log("You are level", player.level, "Your items make you level", playerEffectiveLevel);
