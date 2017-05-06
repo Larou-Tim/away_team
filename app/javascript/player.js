@@ -34,9 +34,11 @@ var Player = function (name) {
         this.effectiveLevel += itemDeck[itemIndex].bonus;
         this[itemDeck[itemIndex].itemType] = itemIndex;
     }
+
     this.calcEffectiveLevel = function () {
         var effectiveLevel = this.level;
         for (var i in this.cardsOut) {
+            console.log(this.cardsOut[i])
             effectiveLevel += this.cardsOut[i].bonus
         }
         return effectiveLevel;

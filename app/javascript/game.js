@@ -2,39 +2,7 @@ var inquirer = require("inquirer");
 var Player = require("./player.js");
 var db = require("../../models");
 
-db.sequelize.sync({ force: false }).then(function() {
 
-});
-
-// --------------- Will be in Database -------------------------
-
-db.Item.create(
-    {"name": "LazOr",
-    "bonus":3}).then(function (dbItems) {});
-
-db.Item.create(
-    {"name": "Battleship",
-    "bonus":10}).then(function (dbItems) {});
-
-db.Item.create(
-    {"name": "Crzy Driod",
-    "bonus":5}).then(function (dbItems) {});
-
-db.Item.create(
-    {"name": "Lacky",
-    "bonus":2}).then(function (dbItems) {});
-
-db.Item.create(
-    {"name": "Smuggler",
-    "bonus":4}).then(function (dbItems) {});
-
-db.Item.create(
-    {"name": "bfg",
-    "bonus":6}).then(function (dbItems) {});
-
-db.Item.create(
-    {"name": "Force Field",
-    "bonus":4}).then(function (dbItems) {});
 
 var baddie = new doorCard(0, "monster", 'One Eye', "He's evil", 2);
 
@@ -65,11 +33,10 @@ function doorCard(number, type, name, desc, effect) {
 }
 
 var treasureDeck = [];
-var awayMissionDeck = [1];
+var awayMissionDeck = [];
 var players = [];
 
 function shuffleDeck(cards, deck) {
-    console.log(deck)
     //want to look into peoples hands and remove those numbers
     // deck.empty();
     // var cardsOut = [];
@@ -88,6 +55,7 @@ function shuffleDeck(cards, deck) {
         deck.push(i);
         // }
     }
+    console.log(deck, "before random");
     shuffle(deck);
 }
 
@@ -105,8 +73,8 @@ function shuffle(array) {
 }
 
 
-shuffleDeck(8, awayMissionDeck);
-console.log(awayMissionDeck.length)
+shuffleDeck(6, awayMissionDeck);
+console.log(awayMissionDeck.length, awayMissionDeck)
 
 
 
@@ -194,12 +162,11 @@ function playCard() {
         }
     ]).then(function (user) {
         if (user.playCard == 'Return') {
-
             startTurn();
         }
         else {
 
-            var cardIndex = findWithAttr(player.hand, "itemName", user.playCard);
+            var cardIndex = findWithAttr(player.hand, "name", user.playCard);
             var card = player.hand[cardIndex];
             player.cardsOut.push(card);
             player.hand.splice(cardIndex, 1);
