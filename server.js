@@ -27,9 +27,11 @@ require("./routes/card-api-routes.js")(app);
 app.use("/", routes);
 
 var db = require("./models");
+db.Player.belongsToMany(db.Item, { through: db.PlayerItem });
+db.Item.belongsToMany(db.Player, { through: db.PlayerItem });
 
 // Syncing our sequelize models and then starting our express app
-db.sequelize.sync({ force: false }).then(function() {
+db.sequelize.sync({ force: true }).then(function() {
   app.listen(port, function() {
     console.log("App listening on PORT " + port);
   });

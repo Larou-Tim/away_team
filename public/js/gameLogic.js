@@ -126,7 +126,7 @@ $(document).ready(function () {
 
   //i want this shifted to a db pull to pull from table player hand
   function getItemCard() {
-
+    $("#playersHand").empty()
     cards = playersCurrentCards;
     console.log("Cards are ", cards)
     if (cards.length) {
@@ -205,7 +205,6 @@ $(document).ready(function () {
       console.log(playersCurrentCards);
     }).then(getItemCard);
   }
-
 
   //updates dropdown for selected player and grabs that players ID for use
   function selectPlayer() {

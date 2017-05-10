@@ -7,23 +7,22 @@ module.exports = function (sequelize, DataTypes) {
                 len: [1]
             }
         },
-         bonus: {
+        bonus: {
             type: DataTypes.INTEGER,
         },
         spot: {
-             type: DataTypes.STRING,
+            type: DataTypes.STRING,
         }
- 
+
     },
 
-        {  
+        {
             classMethods: {
+
+
                 associate: function (models) {
-                   Item.belongsToMany(models.Player, {through: models.PlayerItem});
-                },
-                associate: function (models) {
-                   Item.belongsToMany(models.Player, {through: models.PlayerHand});
-                },
+                    Item.belongsToMany(models.Player, { through: models.PlayerHand });
+                }
             }
         }
     );
