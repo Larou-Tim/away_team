@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }, 
     effect: {
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING
     }, 
     category: {
       type: DataTypes.STRING  

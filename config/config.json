@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "M..7608891648",
+    "password": "password",
     "database": "away_team",
     "host": "127.0.0.1",
     "dialect": "mysql"

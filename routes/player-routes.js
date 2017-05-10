@@ -5,9 +5,7 @@ module.exports = function(app) {
     //Query to create a player
     db.player.create({
       name: req.body.name,
-      level: 1,
-      race: ,
-      class:
+      level: 1
     }).then(function(dbPlayer) {
       res.json(dbPlayer);
     });
