@@ -10,6 +10,7 @@ module.exports = function (sequelize, DataTypes) {
 
                 associate: function (models) {
                     Player.belongsToMany(models.Item, { through: models.PlayerHand });
+                    Player.belongsToMany(models.Item, { through: models.PlayerItem });
                 }
             }
 

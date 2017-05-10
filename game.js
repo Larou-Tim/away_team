@@ -101,7 +101,6 @@ function findWithAttr(array, attr, value) {
     return -1;
 }
 
-
 function turn(val) {
     console.log(players[val].playerName + "'s turn");
     startTurn(val)

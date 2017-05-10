@@ -6,6 +6,7 @@ $(document).ready(function () {
   var selectedPlayerEffectiveLevel;
   var player;
 
+  var cardPlayed;
   // this is a work around until i learn to push in args
   var playersCurrentCards = []
 
@@ -20,10 +21,7 @@ $(document).ready(function () {
   getPlayers();
 
   function handleItemCard() {
-    //need to pull which item it is based on itemCardID
-    //then update player DB based on that item
-
-    //or just have the item be an object that's usuable? 
+    console.log("handleItemCard")
     var cardNumberSelected = $(this).attr("id").substring(4);
     var selectedItemSpot = $(this).attr("itemSpot");
 
@@ -33,6 +31,7 @@ $(document).ready(function () {
       PlayerId: selectedPlayerID
     };
 
+    cardPlayed = cardNumberSelected;
     // $(this).parent().parent().remove()
 
 
@@ -48,10 +47,23 @@ $(document).ready(function () {
   }
 
   function addPlayerItem(item) {
-    console.log(item);
+    console.log("AddPlayerItem");
     $.post("/api/playerItems/", item, function () {
-    }).then(updateItems);
+    }).then(deleteFromHand);
 
+  }
+
+  function deleteFromHand() {
+    if (cardPlayed) {
+      $.ajax({
+        method: "DELETE",
+        url: "/api/playerHand/" + cardPlayed + "/" + selectedPlayerID
+      })
+        .done(function () {
+          updateHand();
+          cardPlayed = ""
+        });
+    }
   }
 
   function updateItems() {
@@ -59,7 +71,7 @@ $(document).ready(function () {
       if (data) {
         for (var i in data.PlayerItems) {
           var selectedItemSpot;
-          console.log(data.PlayerItems[i])
+          // console.log(data.PlayerItems[i])
           switch (data.PlayerItems[i].itemSpot) {
             case "Weapon":
               selectedItemSpot = "weapon";
@@ -125,14 +137,14 @@ $(document).ready(function () {
   }
 
   //i want this shifted to a db pull to pull from table player hand
-  function getItemCard() {
+  function getItemCard(cards) {
     $("#playersHand").empty()
-    cards = playersCurrentCards;
-    console.log("Cards are ", cards)
+    console.log(cards);
+
     if (cards.length) {
       for (var i in cards) {
-        console.log("card search", cards[i])
-        $.get("/api/items/" + cards[i], function (data) {
+        console.log("card search", cards[i].ItemId)
+        $.get("/api/items/" + cards[i].ItemId, function (data) {
 
           var cardCol = $("<div>");
           cardCol.attr("class", "col s12 m3");
@@ -166,7 +178,7 @@ $(document).ready(function () {
           var cardActionButton = $("<a>");
           cardActionButton.attr("href", "#!");
           cardActionButton.attr("class", "btn waves-effect waves-teal cardPlay");
-          cardActionButton.attr("id", "card" + cards[i]);
+          cardActionButton.attr("id", "card" + cards[i].ItemId);
           cardActionButton.attr("itemSpot", data.spot)
           cardActionButton.text("Play Card");
           cardActionDiv.append(cardActionButton);
@@ -191,19 +203,17 @@ $(document).ready(function () {
     };
     console.log(newCard);
     $.post("/api/playerHand/", newCard, function () {
-    }).then(updateHand);
+    });
   }
 
   function updateHand() {
 
     $.get("/api/playerHand/" + selectedPlayerID, function (data) {
-      console.log("handData", data);
-      playersCurrentCards = [];
-      for (var i in data) {
-        playersCurrentCards.push(data[i].ItemId)
-      }
-      console.log(playersCurrentCards);
-    }).then(getItemCard);
+      // console.log("handData", data);
+
+      getItemCard(data)
+
+    });
   }
 
   //updates dropdown for selected player and grabs that players ID for use
@@ -231,14 +241,14 @@ $(document).ready(function () {
       // getItemCard(cardNumber);
       addToPlayerHand(cardNumber);
     }
-
+    updateHand();
   }
 
 
   //pulls cards from item DB
 
 
-  // i want this back end or require need to ask JHill or someone
+ 
 
   //----------------------------------------
   function shuffleDeck(cards, deck) {

@@ -15,7 +15,7 @@ module.exports = function (app) {
   //need to add pull for single player id
 
   app.post("/api/players", function (req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     db.Player.create(req.body).then(function (dbPlayer) {
       res.json(dbPlayer);
     });
@@ -75,7 +75,7 @@ module.exports = function (app) {
 
 
   app.post("/api/playerHand", function (req, res) {
-    console.log("ReqBody", req.body)
+    // console.log("ReqBody", req.body)
     db.PlayerHand.create(req.body).then(function (dbHand) {
       res.json(dbHand);
     });
@@ -95,5 +95,15 @@ module.exports = function (app) {
     });
   });
 
+app.delete("/api/playerHand/:itemId/:playerId", function(req, res) {
+    db.PlayerHand.destroy({
+      where: {
+        ItemId: req.params.itemId,
+        PlayerId: req.params.playerId
+      }
+    }).then(function(dbPost) {
+      res.json(dbPost);
+    });
+  });
 
 };

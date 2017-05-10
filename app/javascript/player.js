@@ -12,7 +12,7 @@ var Player = function (name) {
     this.cardsOut = [];
     this.hand = [];
     this.drawCard = function (deck) {
-        console.log("Hello");
+
         var cardNumber = deck.shift();
         var tempObj = {}
         db.Item.findOne({ where: { id: cardNumber } }).done(function (dbItem) {

@@ -22,7 +22,9 @@ module.exports = function (sequelize, DataTypes) {
 
                 associate: function (models) {
                     Item.belongsToMany(models.Player, { through: models.PlayerHand });
+                     Item.belongsToMany(models.Player, { through: models.PlayerItem });
                 }
+
             }
         }
     );
