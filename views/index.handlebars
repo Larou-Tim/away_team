@@ -1,0 +1,63 @@
+<div class="row">
+  <form class="col s6" id="player-form">
+    <div class="row">
+      <div class="input-field col s6">
+        <i class="material-icons prefix">account_circle</i>
+        <input id="player-name" type="text" class="validate">
+        <label for="player-name">Player Name</label>
+      </div>
+    </div>
+  </form>
+  <div class="col s6"></div>
+  <ul id="playerDropdown" class="dropdown-content">
+  </ul>
+  <a class="btn dropdown-button" href="#!" data-activates="playerDropdown" id="playerSelectDrop">Character Select<i class="mdi-navigation-arrow-drop-down right"></i></a>
+</div>
+
+<div class="row">
+    <div class="col s1"></div>
+  <div class="col s4">
+    <div class="card">
+      <div class="card-content">
+        <p>Your total bonus is + <span id="totalBonus">1</span></p>
+      </div>
+      <div class="card-tabs">
+        <ul class="tabs tabs-fixed-width">
+          <li class="tab"><a href="#weaponOut">Weapon</a></li>
+          <li class="tab"><a class="active" href="#armorOut">Armor</a></li>
+          <li class="tab"><a href="#aideOut">Aide</a></li>
+          <li class="tab"><a href="#shipOut">Ship</a></li>
+        </ul>
+      </div>
+      <div class="card-content grey lighten-4">
+        <div id="weaponOut">You don't have a weapon</div>
+        <div id="armorOut">You don't have Armor</div>
+        <div id="aideOut">You don't have an Aide</div>
+        <div id="shipOut">You Don't have a ship</div>
+      </div>
+    </div>
+  </div>
+  {{!--temp spacing--}}
+  <div class="col s1"></div>
+
+  <div class="col s4">
+    <div class="card" id="awayMissionCard">
+      <div class="card-image">
+        <img src="https://media0.giphy.com/media/QhcPmeqippizS/200.webp#15-grid1" height="250px">
+        <span class="card-title">Away Mission</span>
+        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+      </div>
+      <div class="card-content">
+        <p>Go on an away Mission!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+
+  <div id="playersHand">
+
+  </div>
+
+</div>

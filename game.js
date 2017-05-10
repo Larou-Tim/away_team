@@ -1,25 +1,7 @@
 var inquirer = require("inquirer");
+var Player = require("./player.js");
+var db = require("../../models");
 
-
-// --------------- Will be in Database -------------------------
-var test = [];
-var num1 = new itemCard(1, 'Lazer', 'Weapon', 3, true, false);
-var num2 = new itemCard(2, 'Battleship', 'Ship', 10, true, false);
-var num3 = new itemCard(3, 'Holofield', 2, 'Armor', true, false);
-var num4 = new itemCard(4, 'Crazy Driod', 5, 'Aide', true, false);
-var num5 = new itemCard(5, 'Lacky', 2, 'Aide', true, false);
-var num6 = new itemCard(6, 'Smuggler', 4, 'Ship', true, false);
-var num7 = new itemCard(7, 'bfg', 2, 'Weapon', true, false);
-var num8 = new itemCard(0, 'Force Field', 4, 'Armor', true, false);
-
-test.push(num1);
-test.push(num2);
-test.push(num3);
-test.push(num4);
-test.push(num5);
-test.push(num6);
-test.push(num7);
-test.push(num8);
 
 
 var baddie = new doorCard(0, "monster", 'One Eye', "He's evil", 2);
@@ -29,16 +11,16 @@ baddieDeck.push(baddie);
 
 //-----------------------------------------------------------
 
-function itemCard(number, name, bonus, item, oneTime) {
-    this.itemNumber = number;
-    this.itemName = name;
-    // this.playPhase = phase;
-    this.bonus = bonus;
-    // this.itemType = type;
-    this.item = item;
-    this.oneTime = oneTime;
-    //other effects?
-}
+// function itemCard(number, name, bonus, item, oneTime) {
+//     this.itemNumber = number;
+//     this.itemName = name;
+//     // this.playPhase = phase;
+//     this.bonus = bonus;
+//     // this.itemType = type;
+//     this.item = item;
+//     this.oneTime = oneTime;
+//     //other effects?
+// }
 
 function doorCard(number, type, name, desc, effect) {
     //String // Monster, Curse, others
@@ -51,11 +33,10 @@ function doorCard(number, type, name, desc, effect) {
 }
 
 var treasureDeck = [];
-var awayMissionDeck = [1];
+var awayMissionDeck = [];
 var players = [];
 
 function shuffleDeck(cards, deck) {
-    console.log(deck)
     //want to look into peoples hands and remove those numbers
     // deck.empty();
     // var cardsOut = [];
@@ -68,12 +49,13 @@ function shuffleDeck(cards, deck) {
     // }
     // console.log(cardsOut);
 
-    for (var i = 0; i < cards; i++) {
+    for (var i = 1; i < cards; i++) {
         // var index = cardsOut.indexOf(i);
         // if (index == -1) {
         deck.push(i);
         // }
     }
+    console.log(deck, "before random");
     shuffle(deck);
 }
 
@@ -91,49 +73,10 @@ function shuffle(array) {
 }
 
 
-shuffleDeck(8, awayMissionDeck);
-console.log(awayMissionDeck.length)
-
-var Player = function (name) {
-    this.playerName = name;
-    this.level = 1;
-    this.race = 'Human';
-    this.weapon;
-    this.armor;
-    this.ship;
-    this.aide;
-    this.class = 'None';
-    this.cardsOut = [];
-    this.hand = [];
-    this.drawCard = function (deck) {
-        var cardNumber = deck.shift();
-
-        //query DB
-        var cardIndex = findWithAttr(test, "itemNumber", cardNumber);
-        var card = test[cardIndex];
+shuffleDeck(6, awayMissionDeck);
+console.log(awayMissionDeck.length, awayMissionDeck)
 
 
-        this.hand.push(card);
-    }
-    this.addItem = function (number) {
-        var itemIndex = findWithAttr(itemDeck, itemNumber, number);
-        this.effectiveLevel += itemDeck[itemIndex].bonus;
-        this[itemDeck[itemIndex].itemType] = itemIndex;
-    }
-    this.calcEffectiveLevel = function () {
-        var effectiveLevel = this.level;
-        for (var i in this.cardsOut) {
-            effectiveLevel += this.cardsOut[i].bonus
-        }
-        return effectiveLevel;
-    }
-    this.playCard = function (card) {
-        //remove frome hand array and either immediate or add to 
-    }
-    this.showHand = function () {
-        console.log(this.hand);
-    }
-}
 
 var player = new Player('Bob');
 
@@ -206,7 +149,7 @@ function showOut() {
 function playCard() {
     var choiceArray = [];
     for (var i = 0; i < player.hand.length; i++) {
-        choiceArray.push(player.hand[i].itemName);
+        choiceArray.push(player.hand[i].name);
     }
     choiceArray.push('Return');
 
@@ -219,12 +162,11 @@ function playCard() {
         }
     ]).then(function (user) {
         if (user.playCard == 'Return') {
-
             startTurn();
         }
         else {
 
-            var cardIndex = findWithAttr(player.hand, "itemName", user.playCard);
+            var cardIndex = findWithAttr(player.hand, "name", user.playCard);
             var card = player.hand[cardIndex];
             player.cardsOut.push(card);
             player.hand.splice(cardIndex, 1);
@@ -240,7 +182,7 @@ function awayMission() {
     var cardIndex = findWithAttr(baddieDeck, "cardNumber", cardNumber);
     var card = baddieDeck[cardIndex];
     var baddieLevel = card.effect
-    var playerEffectiveLevel = player.calcEffectiveLevel()
+    var playerEffectiveLevel = player.calcEffectiveLevel();
 
     console.log("You are fighting", card.name, "Which is level", baddieLevel);
     console.log("You are level", player.level, "Your items make you level", playerEffectiveLevel);

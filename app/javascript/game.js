@@ -3,24 +3,42 @@ var Player = require("./player.js");
 var db = require("../../models");
 
 
-
-var baddie = new doorCard(0, "monster", 'One Eye', "He's evil", 2);
-
 var baddieDeck = [];
+var treasureDeck = [];
+var awayMissionDeck = [];
+var player = new Player('Bob');
+
+console.log("Working")
+var baddie = new doorCard(0, "monster", 'One Eye', "He's evil", 2);
 baddieDeck.push(baddie);
+//callbacks needed
+shuffleDeck(6, awayMissionDeck);
 
-//-----------------------------------------------------------
 
-function itemCard(number, name, bonus, item, oneTime) {
-    this.itemNumber = number;
-    this.itemName = name;
-    // this.playPhase = phase;
-    this.bonus = bonus;
-    // this.itemType = type;
-    this.item = item;
-    this.oneTime = oneTime;
-    //other effects?
+var Game = function () {
+
+    this.game = function () {
+        //wasn't able to just call this function later. needs further testing
+
+
+        // console.log("Working")
+        // var baddie = new doorCard(0, "monster", 'One Eye', "He's evil", 2);
+        // baddieDeck.push(baddie);
+        // shuffleDeck(6, awayMissionDeck);
+
+
+        // // players.push(player);
+
+        // for (var i = 0; i < 5; i++) {
+        //     player.drawCard(awayMissionDeck);
+        // }
+    }
+
+    this.playerHand = function () {
+        return player.showHand();
+    }
 }
+
 
 function doorCard(number, type, name, desc, effect) {
     //String // Monster, Curse, others
@@ -32,10 +50,11 @@ function doorCard(number, type, name, desc, effect) {
 
 }
 
-var treasureDeck = [];
-var awayMissionDeck = [];
+
 var players = [];
 
+//creates a 'deck' by pushing amount of cards to an array
+// calls 'shuffle' function to randomize the order
 function shuffleDeck(cards, deck) {
     //want to look into peoples hands and remove those numbers
     // deck.empty();
@@ -55,10 +74,11 @@ function shuffleDeck(cards, deck) {
         deck.push(i);
         // }
     }
-    console.log(deck, "before random");
+    // console.log(deck, "before random");
     shuffle(deck);
 }
 
+//randomize the order of the 'cards' in the deck
 function shuffle(array) {
     var i = 0
         , j = 0
@@ -72,25 +92,13 @@ function shuffle(array) {
     }
 }
 
+// starts game by drawing 5 cards for the players use
+function gameStart() {
+    for (var i = 0; i < 5; i++) {
+        player.drawCard(awayMissionDeck);
+    }
 
-shuffleDeck(6, awayMissionDeck);
-console.log(awayMissionDeck.length, awayMissionDeck)
-
-
-
-var player = new Player('Bob');
-
-players.push(player);
-
-for (var i = 0; i < 5; i++) {
-    player.drawCard(awayMissionDeck);
 }
-
-
-console.log(player.name, "has", player.hand);
-// console.log(deck.length);
-
-turn(0);
 
 function findWithAttr(array, attr, value) {
     for (var i = 0; i < array.length; i += 1) {
@@ -101,101 +109,97 @@ function findWithAttr(array, attr, value) {
     return -1;
 }
 
+module.exports = Game;
 
-function turn(val) {
-    console.log(players[val].playerName + "'s turn");
-    startTurn(val)
-}
+// function startTurn(val) {
+//     var choiceArray = ["View Hand", "Play card", "Go on Mission", "See Items Out"];
+//     // console.log(choiceArray);
+//     inquirer.prompt([
+//         {
+//             type: "list",
+//             message: "Which card would you like to play?",
+//             choices: choiceArray,
+//             name: "playCard"
+//         }
+//     ]).then(function (user) {
+//         switch (user.playCard) {
+//             case choiceArray[0]:
+//                 // viewHand();
+//                 player.showHand();
+//                 startTurn();
+//                 break;
+//             case choiceArray[1]:
+//                 playCard();
+//                 break;
+//             case choiceArray[2]:
+//                 awayMission();
+//                 break;
+//             case choiceArray[3]:
+//                 showOut();
+//                 break;
+//         }
 
-function startTurn(val) {
-    var choiceArray = ["View Hand", "Play card", "Go on Mission", "See Items Out"];
-    // console.log(choiceArray);
-    inquirer.prompt([
-        {
-            type: "list",
-            message: "Which card would you like to play?",
-            choices: choiceArray,
-            name: "playCard"
-        }
-    ]).then(function (user) {
-        switch (user.playCard) {
-            case choiceArray[0]:
-                // viewHand();
-                player.showHand();
-                startTurn();
-                break;
-            case choiceArray[1]:
-                playCard();
-                break;
-            case choiceArray[2]:
-                awayMission();
-                break;
-            case choiceArray[3]:
-                showOut();
-                break;
-        }
+//     });
+// }
 
-    });
-}
+// function showOut() {
+//     for (var i in player.cardsOut) {
+//         console.log(player.cardsOut[i]);
 
-function showOut() {
-    for (var i in player.cardsOut) {
-        console.log(player.cardsOut[i]);
+//     }
+//     startTurn();
+// }
 
-    }
-    startTurn();
-}
+// function playCard() {
+//     var choiceArray = [];
+//     for (var i = 0; i < player.hand.length; i++) {
+//         choiceArray.push(player.hand[i].name);
+//     }
+//     choiceArray.push('Return');
 
-function playCard() {
-    var choiceArray = [];
-    for (var i = 0; i < player.hand.length; i++) {
-        choiceArray.push(player.hand[i].name);
-    }
-    choiceArray.push('Return');
+//     inquirer.prompt([
+//         {
+//             type: "list",
+//             message: "Which card would you like to play?",
+//             choices: choiceArray,
+//             name: "playCard"
+//         }
+//     ]).then(function (user) {
+//         if (user.playCard == 'Return') {
+//             startTurn();
+//         }
+//         else {
 
-    inquirer.prompt([
-        {
-            type: "list",
-            message: "Which card would you like to play?",
-            choices: choiceArray,
-            name: "playCard"
-        }
-    ]).then(function (user) {
-        if (user.playCard == 'Return') {
-            startTurn();
-        }
-        else {
+//             var cardIndex = findWithAttr(player.hand, "name", user.playCard);
+//             var card = player.hand[cardIndex];
+//             player.cardsOut.push(card);
+//             player.hand.splice(cardIndex, 1);
+//         }
+//         startTurn();
+//     });
+// }
 
-            var cardIndex = findWithAttr(player.hand, "name", user.playCard);
-            var card = player.hand[cardIndex];
-            player.cardsOut.push(card);
-            player.hand.splice(cardIndex, 1);
-        }
-        startTurn();
-    });
-}
+// function awayMission() {
 
-function awayMission() {
+//     var cardNumber = 0; //awayMissionDeck.shift()
+//     //query DB
+//     var cardIndex = findWithAttr(baddieDeck, "cardNumber", cardNumber);
+//     var card = baddieDeck[cardIndex];
+//     var baddieLevel = card.effect
+//     var playerEffectiveLevel = player.calcEffectiveLevel();
 
-    var cardNumber = 0; //awayMissionDeck.shift()
-    //query DB
-    var cardIndex = findWithAttr(baddieDeck, "cardNumber", cardNumber);
-    var card = baddieDeck[cardIndex];
-    var baddieLevel = card.effect
-    var playerEffectiveLevel = player.calcEffectiveLevel();
+//     console.log("You are fighting", card.name, "Which is level", baddieLevel);
+//     console.log("You are level", player.level, "Your items make you level", playerEffectiveLevel);
 
-    console.log("You are fighting", card.name, "Which is level", baddieLevel);
-    console.log("You are level", player.level, "Your items make you level", playerEffectiveLevel);
+//     //play one time cards
 
-    //play one time cards
+//     if (playerEffectiveLevel > baddieLevel) {
+//         console.log("You Win");
 
-    if (playerEffectiveLevel > baddieLevel) {
-        console.log("You Win");
-
-    }
-    else {
-        console.log("You die");
-    }
+//     }
+//     else {
+//         console.log("You die");
+//     }
 
 
-}
+// }

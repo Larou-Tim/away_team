@@ -1,4 +1,4 @@
-var db = require("../../models");
+var db = require("./models");
 
 var Player = function (name) {
     this.playerName = name;
@@ -12,7 +12,6 @@ var Player = function (name) {
     this.cardsOut = [];
     this.hand = [];
     this.drawCard = function (deck) {
-        console.log("Hello");
         var cardNumber = deck.shift();
         var tempObj = {}
         db.Item.findOne({ where: { id: cardNumber } }).done(function (dbItem) {
@@ -36,6 +35,7 @@ var Player = function (name) {
         this[itemDeck[itemIndex].itemType] = itemIndex;
     }
 
+    //will be used for the 'battle' sequence to calc all items out bonus amounts
     this.calcEffectiveLevel = function () {
         var effectiveLevel = this.level;
         for (var i in this.cardsOut) {
@@ -48,7 +48,7 @@ var Player = function (name) {
         //remove frome hand array and either immediate or add to 
     }
     this.showHand = function () {
-        console.log(this.hand);
+        return this.hand;
     }
 }
 
