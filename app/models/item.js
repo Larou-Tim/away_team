@@ -12,17 +12,19 @@ module.exports = function (sequelize, DataTypes) {
         },
         spot: {
             type: DataTypes.STRING,
+        },
+        description: {
+            type: DataTypes.TEXT
         }
 
     },
-
         {
             classMethods: {
 
 
                 associate: function (models) {
                     Item.belongsToMany(models.Player, { through: models.PlayerHand });
-                     Item.belongsToMany(models.Player, { through: models.PlayerItem });
+                    Item.belongsToMany(models.Player, { through: models.PlayerItem });
                 }
 
             }

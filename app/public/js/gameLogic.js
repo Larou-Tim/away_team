@@ -3,8 +3,6 @@
 // need to finish hand/cards/items -- done i think, need to rewire
 // Start on the door deck for the actual game
 
-
-
 $(document).ready(function () {
   var nameInput = $("#player-name");
   // var player = new Player("Test");
@@ -123,7 +121,7 @@ $(document).ready(function () {
       }
 
       console.log("item update data", data);
-      
+
       if (data) {
         for (var i in data) {
           var selectedItemSpot;
@@ -135,8 +133,8 @@ $(document).ready(function () {
             case "Armor":
               selectedItemSpot = "armor";
               break;
-            case "Aide":
-              selectedItemSpot = "aide";
+            case "Helper":
+              selectedItemSpot = "helper";
               break;
             case "Ship":
               selectedItemSpot = "ship";
@@ -165,7 +163,9 @@ $(document).ready(function () {
         .val()
         .trim(),
       level: 1,
-      effectiveLevel: 1
+      effectiveLevel: 1,
+      race: "Human",
+      class: "Captain"
     });
   }
 
@@ -218,30 +218,56 @@ $(document).ready(function () {
           var cardTitle = $("<span>");
           cardTitle.text(data.name);
           cardImageDiv.append(cardTitle);
+
+
+
+          // ------ card fab instead of button
+
+          var cardActionButton = $("<a>");
+          cardActionButton.attr("class", "btn-floating halfway-fab waves-effect waves-light red cardPlay");
+          cardActionButton.attr("id", "card" + data.id);
+          cardActionButton.attr("itemSpot", data.spot)
+
+          var fabIcon = $("<i>");
+          fabIcon.attr("class", "material-icons")
+          fabIcon.text("add");
+
+          cardActionButton.append(fabIcon);
+          cardImageDiv.append(cardActionButton);
+
           cardDiv.append(cardImageDiv);
 
           var cardContentDiv = $("<div>");
           cardContentDiv.attr("class", "card-content");
+
+          var cardBonus = $("<h5>");
+          cardBonus.text("+" + data.bonus + " " + data.spot);
+          cardContentDiv.append(cardBonus);
+
           var cardContentText = $("<p>");
           //need item spot
-          cardContentText.text("The " + data.name + " adds a +" + data.bonus + " bonus and uses the " + data.spot + " spot");
+          cardContentText.text(data.description);
           cardContentDiv.append(cardContentText);
 
           cardDiv.append(cardContentDiv);
 
-          var cardActionDiv = $("<div>");
-          cardActionDiv.attr("class", "card-action");
+          // var cardActionDiv = $("<div>");
+          // cardActionDiv.attr("class", "card-action");
 
-          var cardActionButton = $("<a>");
-          cardActionButton.attr("href", "#!");
-          cardActionButton.attr("class", "btn waves-effect waves-teal cardPlay");
-          //this is not adding correct card
-          // console.log("Card is", data.name ,data.ItemId,)
-          cardActionButton.attr("id", "card" + data.id);
-          cardActionButton.attr("itemSpot", data.spot)
-          cardActionButton.text("Play Card");
-          cardActionDiv.append(cardActionButton);
-          cardDiv.append(cardActionDiv);
+          // var cardActionButton = $("<a>");
+          //button
+
+          // cardActionButton.attr("href", "#!");
+          // cardActionButton.attr("class", "btn waves-effect waves-teal cardPlay");
+          // cardActionButton.text("Play Card");
+
+
+
+          // cardActionButton.attr("id", "card" + data.id);
+          // cardActionButton.attr("itemSpot", data.spot)
+
+          // cardActionDiv.append(cardActionButton);
+          // cardDiv.append(cardActionDiv);
 
           cardCol.append(cardDiv)
           $("#playersHand").append(cardCol);
@@ -289,7 +315,7 @@ $(document).ready(function () {
   //should probably be a back end call if i can figure that out
   function handleNewGame() {
     awayMissionDeck = [];
-    shuffleDeck(7, awayMissionDeck)
+    shuffleDeck(28, awayMissionDeck)
     console.log(awayMissionDeck);
 
   }
@@ -346,6 +372,8 @@ $(document).ready(function () {
   }
 
 
+
+//*********** not used */
   var Player = function (id) {
     this.playerID = id;
     this.level = 1;
