@@ -110,15 +110,15 @@ $(document).ready(function () {
   //handle to display the items a player has out
   //calls api to get items associated with that player
   function updateItems() {
-    console.log('updating Items for', selectedPlayerID);
+    console.log('updating Items for playerID', selectedPlayerID);
     $.get("/api/playerItems/" + selectedPlayerID, function (data) {
       //will use this to track items player has
-      var spotsTaken = {
-        armor: false,
-        weapon: false,
-        ship: false,
-        aide: false
-      }
+      // var spotsTaken = {
+      //   armor: false,
+      //   weapon: false,
+      //   ship: false,
+      //   aide: false
+      // }
 
       console.log("item update data", data);
 
@@ -224,7 +224,7 @@ $(document).ready(function () {
           // ------ card fab instead of button
 
           var cardActionButton = $("<a>");
-          cardActionButton.attr("class", "btn-floating halfway-fab waves-effect waves-light red cardPlay");
+          cardActionButton.attr("class", "btn-floating halfway-fab waves-effect waves-light teal cardPlay");
           cardActionButton.attr("id", "card" + data.id);
           cardActionButton.attr("itemSpot", data.spot)
 
@@ -328,7 +328,6 @@ $(document).ready(function () {
     }
     updateHand();
   }
-
 
   //pulls cards from item DB
 
