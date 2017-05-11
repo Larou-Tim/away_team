@@ -12,6 +12,21 @@ module.exports = function (app) {
     });
   });
 
+  app.get("/api/players/:id", function (req, res) {
+
+
+    db.Player.findAll({
+      where: {
+        id: req.params.id
+
+      }
+    }).then(function (dbPlayerItem) {
+      // console.log(dbPlayerItem);
+      res.json(dbPlayerItem);
+    });
+  });
+
+
   //need to add pull for single player id
 
   app.post("/api/players", function (req, res) {
@@ -43,7 +58,7 @@ module.exports = function (app) {
       include: [db.Item],
       where: {
         PlayerId: req.params.playerid
-   
+
       }
     }).then(function (dbPlayerItem) {
       // console.log(dbPlayerItem);
@@ -66,17 +81,17 @@ module.exports = function (app) {
   //   });
   // });
 
-// updating the effective level after playing items
+  // updating the effective level after playing items
 
-app.put("/api/playerELevel/", function(req, res) {
-    
+  app.put("/api/playerELevel/", function (req, res) {
+
     db.Player.update(
       req.body,
       {
         where: {
           id: req.body.id,
         }
-      }).then(function(dbPlayerItem) {
+      }).then(function (dbPlayerItem) {
         res.json(dbPlayerItem);
       });
   });
@@ -89,8 +104,8 @@ app.put("/api/playerELevel/", function(req, res) {
   });
 
 
-   app.put("/api/playerItems", function(req, res) {
-     console.log("update query",req.body)
+  app.put("/api/playerItems", function (req, res) {
+    console.log("update query", req.body)
     db.PlayerItem.update(
       req.body,
       {
@@ -98,7 +113,7 @@ app.put("/api/playerELevel/", function(req, res) {
           PlayerId: req.body.PlayerId,
           spot: req.body.spot
         }
-      }).then(function(dbPlayerItem) {
+      }).then(function (dbPlayerItem) {
         res.json(dbPlayerItem);
       });
   });
@@ -125,13 +140,13 @@ app.put("/api/playerELevel/", function(req, res) {
     });
   });
 
-app.delete("/api/playerHand/:itemId/:playerId", function(req, res) {
+  app.delete("/api/playerHand/:itemId/:playerId", function (req, res) {
     db.PlayerHand.destroy({
       where: {
         ItemId: req.params.itemId,
         PlayerId: req.params.playerId
       }
-    }).then(function(dbPost) {
+    }).then(function (dbPost) {
       res.json(dbPost);
     });
   });

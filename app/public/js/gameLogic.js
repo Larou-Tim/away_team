@@ -32,19 +32,106 @@ $(document).ready(function () {
   $(document).on("click", ".cardPlay", handleItemCard);
   $(document).on("click", "#awayMission", handleAwayMission);
 
+  $(document).on("click", "#fight", handleFight);
+  $(document).on("click", "#runaway", handleRun);
+
   //pulls in all players in the DB for selection (this should be log in or something, but testing this will work)
   getPlayers();
 
+  function handleRun() {
+
+  }
+
+  function handleFight() {
+    //first get player's effective level
+    // then compare 
+    // then we decide what happens
+    var playerLevel;
+    var enemyLevel;
+    var reward;
+    var doorCard = $(this).attr("doorCard")
+
+    $.get("/api/players/" + selectedPlayerID, function (data) {
+      playerLevel = data[0].effectiveLevel;
+      $.get("/api/doors/" + doorCard, function (data) {
+        console.log("---------- Door data", data)
+        enemyLevel = data[0].level;
+        reward = data[0].treasure;
+        if (playerLevel > enemyLevel) {
+          drawNCards(reward);
+          updatePlayerLevel(1);
+          resetAwayCard();
+        }
+        else {
+          handleLoss();
+        }
+      });
+
+    });
+
+
+
+
+
+  }
   // function when player uses card from hand to play to items
   // grabs current static player and data stored on the button of the item
   // then runs api call to create/update that players items
   // runs either updatePlayerItem() or addPlayerItem
+
+  function updatePlayerLevel(levels) {
+    $.get("/api/players/" + selectedPlayerID, function (data) {
+      var playerCurrentLevel = data[0].level;
+      playerCurrentLevel += levels;
+
+      if (playerCurrentLevel > 0) {
+        $.ajax({
+          method: "PUT",
+          url: "/api/playerLevelUp",
+          data: {
+            id: selectedPlayerID,
+            level: playerCurrentLevel
+          }
+        });
+        updateHand()
+        updateItems();
+      }
+      else {
+        console.log("You ded");
+      }
+    });
+  }
 
   function handleAwayMission() {
 
     $.get("/api/door/", function (data) {
       $("#awayTitle").text(data[0].name + " Level " + data[0].level)
       $("#awayContent").text(data[0].description);
+
+      var newFabFight = $("<a>");
+      newFabFight.attr("class", "btn-floating halfway-fab waves-effect waves-light green");
+      newFabFight.attr("id", "fight");
+      var newFabFightIcon = $("<i>");
+      newFabFightIcon.attr("class", "material-icons");
+      newFabFightIcon.text("play_arrow");
+      newFabFight.attr("doorCard", data[0].id);
+
+      newFabFight.append(newFabFightIcon);
+      $("#awayMissionInner").append(newFabFight);
+
+      var newFabRun = $("<a>");
+      newFabRun.attr("class", "btn-floating halfway-fab waves-effect waves-light orange");
+      newFabRun.attr("id", "runaway");
+      var newFabRunIcon = $("<i>");
+      newFabRunIcon.attr("class", "material-icons");
+      newFabRunIcon.text("call_missed");
+
+      newFabRun.append(newFabRunIcon);
+      $("#awayMissionInner").append(newFabRun);
+
+
+
+
     });
   }
 
@@ -354,12 +441,47 @@ $(document).ready(function () {
     updateItems();
   }
 
+
+  function resetAwayCard() {
+
+    $("#awayMissionInner").empty();
+
+    var awayImg = $("<img>");
+    awayImg.attr("src", "https://media0.giphy.com/media/QhcPmeqippizS/200.webp#15-grid1")
+    awayImg.attr("height", "250px")
+    $("#awayMissionInner").append(awayImg);
+    var awayTitle = $("<span>");
+    awayTitle.attr("class", "card-title");
+    awayTitle.attr("id", "awayTitle");
+    awayTitle.text("Away Mission");
+    $("#awayMissionInner").append(awayTitle);
+
+    var awayButton = $("<a>");
+    awayButton.attr("class", "btn-floating halfway-fab waves-effect waves-light red");
+    awayButton.attr("id", "awayMission");
+    var awayButtonIcon = $("<i>");
+    awayButtonIcon.attr("class", "material-icons")
+    awayButtonIcon.text("add");
+    awayButton.append(awayButtonIcon);
+    $("#awayMissionInner").append(awayButton);
+    $("#awayContent").text("Go on an away Mission!");
+
+  }
   //should probably be a back end call if i can figure that out
   function handleNewGame() {
     awayMissionDeck = [];
     shuffleDeck(28, awayMissionDeck)
     console.log(awayMissionDeck);
 
+  }
+
+  function drawNCards(n) {
+    for (var i = 0; i < n; i++) {
+      var cardNumber = awayMissionDeck.shift();
+      // getItemCard(cardNumber);
+      addToPlayerHand(cardNumber);
+    }
+    updateHand();
   }
 
   function drawFiveCards() {
