@@ -1,10 +1,11 @@
 var db = require("../models");
+var Sequelize = require('sequelize');
 
 module.exports = function(app) {
-  app.get("/api/", function(req, res) {
+  app.get("/api/door", function(req, res) {
     //Query to populate players hand when the game starts
-    db.Doors.findAll({
-      limit: 4,
+    db.Door.findAll({
+      limit: 1,
       order: [Sequelize.fn('RAND')]
     }).then(function(dbHand) {
       res.json(dbHand);

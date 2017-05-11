@@ -66,6 +66,20 @@ module.exports = function (app) {
   //   });
   // });
 
+// updating the effective level after playing items
+
+app.put("/api/playerELevel/", function(req, res) {
+    
+    db.Player.update(
+      req.body,
+      {
+        where: {
+          id: req.body.id,
+        }
+      }).then(function(dbPlayerItem) {
+        res.json(dbPlayerItem);
+      });
+  });
 
 
   app.post("/api/playerItems", function (req, res) {

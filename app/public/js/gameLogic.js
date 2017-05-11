@@ -30,16 +30,24 @@ $(document).ready(function () {
   $(document).on("click", ".playerSelect", selectPlayer);
   $(document).on("click", "#drawFive", drawFiveCards);
   $(document).on("click", ".cardPlay", handleItemCard);
-
+  $(document).on("click", "#awayMission", handleAwayMission);
 
   //pulls in all players in the DB for selection (this should be log in or something, but testing this will work)
   getPlayers();
-
 
   // function when player uses card from hand to play to items
   // grabs current static player and data stored on the button of the item
   // then runs api call to create/update that players items
   // runs either updatePlayerItem() or addPlayerItem
+
+  function handleAwayMission() {
+
+    $.get("/api/door/", function (data) {
+      $("#awayTitle").text(data[0].name + " Level " + data[0].level)
+      $("#awayContent").text(data[0].description);
+    });
+  }
+
   function handleItemCard() {
 
     var cardNumberSelected = $(this).attr("id").substring(4);
@@ -52,7 +60,6 @@ $(document).ready(function () {
     };
 
     cardPlayed = cardNumberSelected;
-
 
     var updating = playerCurrentItems[selectedItemSpot];
 
@@ -106,19 +113,54 @@ $(document).ready(function () {
     }
   }
 
+
+  function calcEffectiveLevel() {
+    var bonus = {
+      level: 1,
+      Armor: 0,
+      Weapon: 0,
+      Ship: 0,
+      Helper: 0
+    }
+
+    $.get("/api/playerItems/" + selectedPlayerID, function (data) {
+      if (data) {
+
+        for (var i in data) {
+          bonus[data[i].Item.spot] = data[i].Item.bonus
+        }
+      }
+
+      var totalBonus = bonus.level + bonus.Armor + bonus.Weapon + bonus.Ship + bonus.Helper;
+      $("#totalBonus").text(totalBonus)
+      updateEffectiveLevel(totalBonus);
+    });
+
+
+  }
+
+  function updateEffectiveLevel(level) {
+    console.log("updating level to ", level)
+    var query = {
+      id: selectedPlayerID,
+      effectiveLevel: level
+    }
+
+    $.ajax({
+      method: "PUT",
+      url: "/api/playerELevel/",
+      data: query
+
+    })
+  }
+
   //---------- needs update call if no item in slot
   //handle to display the items a player has out
   //calls api to get items associated with that player
   function updateItems() {
     console.log('updating Items for playerID', selectedPlayerID);
     $.get("/api/playerItems/" + selectedPlayerID, function (data) {
-      //will use this to track items player has
-      // var spotsTaken = {
-      //   armor: false,
-      //   weapon: false,
-      //   ship: false,
-      //   aide: false
-      // }
+
 
       console.log("item update data", data);
 
@@ -144,7 +186,7 @@ $(document).ready(function () {
 
         }
       }
-
+      calcEffectiveLevel()
     });
 
   }
@@ -330,7 +372,6 @@ $(document).ready(function () {
   }
 
   //pulls cards from item DB
-
   //----------------------------------------
   function shuffleDeck(cards, deck) {
     //want to look into peoples hands and remove those numbers
@@ -370,9 +411,7 @@ $(document).ready(function () {
     }
   }
 
-
-
-//*********** not used */
+  //*********** not used */
   var Player = function (id) {
     this.playerID = id;
     this.level = 1;
