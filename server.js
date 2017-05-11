@@ -41,19 +41,19 @@ db.sequelize.sync({ force: false }).then(function() {
 
 //insert for item testing
 
-// var item = {name:"Lazor",bonus:3,spot:"Weapon"}
-// db.Item.create(item)
-// item = {name:"Battleship",bonus:10,spot:"Ship"}
-// db.Item.create(item)
-// item = {name:"Lacky",bonus:2,spot:"Aide"}
-// db.Item.create(item)
-// item = {name:"Crazy Driod",bonus:4,spot:"Aide"}
-// db.Item.create(item)
-// item = {name:"Smuggling Ship",bonus:3,spot:"Ship"}
-// db.Item.create(item)
-// item = {name:"bfg",bonus:6,spot:"Weapon"}
-// db.Item.create(item)
-// item = {name:"Force Field",bonus:3,spot:"Armor"}
-// db.Item.create(item)
-// item = {name:"Phase Shifter",bonus:3,spot:"Armor"}
-// db.Item.create(item)
+var item = {name:"Lazor",bonus:3,spot:"Weapon"}
+db.Item.create(item)
+item = {name:"Battleship",bonus:10,spot:"Ship"}
+db.Item.create(item)
+item = {name:"Lacky",bonus:2,spot:"Aide"}
+db.Item.create(item)
+item = {name:"Crazy Driod",bonus:4,spot:"Aide"}
+db.Item.create(item)
+item = {name:"Smuggling Ship",bonus:3,spot:"Ship"}
+db.Item.create(item)
+item = {name:"bfg",bonus:6,spot:"Weapon"}
+db.Item.create(item)
+item = {name:"Force Field",bonus:3,spot:"Armor"}
+db.Item.create(item)
+item = {name:"Phase Shifter",bonus:3,spot:"Armor"}
+db.Item.create(item)

@@ -12,6 +12,14 @@ $(document).ready(function () {
   var selectedPlayerID;
   var selectedPlayerEffectiveLevel;
 
+  //used to determine if item should be a post/put
+  var playerCurrentItems = {
+    Weapon: false,
+    Armor: false,
+    Ship: false,
+    Aide: false
+  }
+
   //not used? might want to go back to constructors?
   var player;
 
@@ -30,7 +38,7 @@ $(document).ready(function () {
   getPlayers();
 
   function handleItemCard() {
-  
+
     var cardNumberSelected = $(this).attr("id").substring(4);
     var selectedItemSpot = $(this).attr("itemspot");
 
@@ -41,23 +49,40 @@ $(document).ready(function () {
     };
 
     cardPlayed = cardNumberSelected;
+
+
+    var updating = playerCurrentItems[selectedItemSpot];
+
+    //add or update to playersItemsOut
+    //using simple selector instead of pulling from server could update
+
+    if (updating) {
+      // item.id = postId;
+      updatePlayerItem(newItemSpot);
   
-  //add or update to playersItemsOut
-    // if (updating) {
-    //   item.id = postId;
-    //   updatePost(newPost);
-    // }
-    // else {
-    addPlayerItem(newItemSpot);
-    // }
+    }
+    else {
+      console.log("add it");
+      playerCurrentItems[selectedItemSpot] = true;
+      addPlayerItem(newItemSpot);
+    }
 
   }
 
   function addPlayerItem(item) {
-    console.log("AddPlayerItem");
+
     $.post("/api/playerItems/", item, function () {
     }).then(deleteFromHand);
 
+  }
+
+ function updatePlayerItem(item) {
+    $.ajax({
+      method: "PUT",
+      url: "/api/playerItems",
+      data: item
+    })
+    .done(deleteFromHand);
   }
 
   function deleteFromHand() {
@@ -74,10 +99,11 @@ $(document).ready(function () {
     }
   }
 
+//handle to display the items a player has out
   function updateItems() {
     console.log('updating Items for', selectedPlayerID);
     $.get("/api/playerItems/" + selectedPlayerID, function (data) {
-      console.log(data);
+      console.log("item update dat",data);
       if (data) {
         for (var i in data) {
           var selectedItemSpot;
@@ -96,7 +122,8 @@ $(document).ready(function () {
               selectedItemSpot = "ship";
               break;
           }
-          $("#" + selectedItemSpot + "Out").text("You have a "+ data[i].Item.name + ". This gives you +" + data[i].Item.bonus);
+          $("#" + selectedItemSpot + "Out").text("You have a " + data[i].Item.name + ". This gives you +" + data[i].Item.bonus);
+         
         }
       }
 
@@ -155,7 +182,7 @@ $(document).ready(function () {
       for (var i in cards) {
         // console.log("card search", cards[i].ItemId)
         $.get("/api/items/" + cards[i].ItemId, function (data) {
-            // console.log("card data ------- ", data);
+          // console.log("card data ------- ", data);
           var cardCol = $("<div>");
           cardCol.attr("class", "col s12 m3");
 
@@ -241,7 +268,7 @@ $(document).ready(function () {
 
   //should probably be a back end call if i can figure that out
   function handleNewGame() {
-
+    awayMissionDeck = [];
     shuffleDeck(7, awayMissionDeck)
     console.log(awayMissionDeck);
 

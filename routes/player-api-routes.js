@@ -75,6 +75,21 @@ module.exports = function (app) {
   });
 
 
+   app.put("/api/playerItems", function(req, res) {
+     console.log("update query",req.body)
+    db.PlayerItem.update(
+      req.body,
+      {
+        where: {
+          PlayerId: req.body.PlayerId,
+          spot: req.body.spot
+        }
+      }).then(function(dbPlayerItem) {
+        res.json(dbPlayerItem);
+      });
+  });
+
+
   app.post("/api/playerHand", function (req, res) {
     // console.log("ReqBody", req.body)
     db.PlayerHand.create(req.body).then(function (dbHand) {
