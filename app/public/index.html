@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+
+    <div class="fixed-action-btn horizontal click-to-toggle">
+        <a class="btn-floating btn-large red">
+      <i class="material-icons">menu</i>
+    </a>
+        <ul>
+            <li><a class="btn-floating red" id="newGame"><i class="material-icons">insert_chart</i></a></li>
+            <li><a class="btn-floating yellow darken-1" id="drawFive"><i class="material-icons">format_quote</i></a></li>
+            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+            <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <form class="col s6" id="player-form">
+            <div class="row">
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input id="player-name" type="text" class="validate">
+                    <label for="player-name">Player Name</label>
+                </div>
+            </div>
+        </form>
+        <div class="col s6"></div>
+        <ul id="playerDropdown" class="dropdown-content">
+        </ul>
+        <a class="btn dropdown-button" href="#!" data-activates="playerDropdown" id="playerSelectDrop">Character Select<i class="mdi-navigation-arrow-drop-down right"></i></a>
+    </div>
+
+    <div class="row">
+        <div class="col s1"></div>
+        <div class="col s4">
+            <div class="card">
+                <div class="card-content">
+                    <p>Your total bonus is + <span id="totalBonus">1</span></p>
+                </div>
+                <div class="card-tabs">
+                    <ul class="tabs tabs-fixed-width">
+                        <li class="tab"><a href="#weaponOut">Weapon</a></li>
+                        <li class="tab"><a class="active" href="#armorOut">Armor</a></li>
+                        <li class="tab"><a href="#aideOut">Aide</a></li>
+                        <li class="tab"><a href="#shipOut">Ship</a></li>
+                    </ul>
+                </div>
+                <div class="card-content grey lighten-4">
+                    <div id="weaponOut">You don't have a weapon</div>
+                    <div id="armorOut">You don't have Armor</div>
+                    <div id="aideOut">You don't have an Aide</div>
+                    <div id="shipOut">You don't have a ship</div>
+                </div>
+            </div>
+        </div>
+        {{!--temp spacing--}}
+        <div class="col s1"></div>
+
+        <div class="col s4">
+            <div class="card" id="awayMissionCard">
+                <div class="card-image">
+                    <img src="https://media0.giphy.com/media/QhcPmeqippizS/200.webp#15-grid1" height="250px">
+                    <span class="card-title">Away Mission</span>
+                    <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                </div>
+                <div class="card-content">
+                    <p>Go on an away Mission!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div id="playersHand">
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/gameLogic.js"></script>
+
+
+
+</body>
+
+</html>

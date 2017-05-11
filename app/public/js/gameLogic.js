@@ -1,6 +1,6 @@
 // need to bring in the other DBs
-// need to reorg our file structure
-// need to finish hand/cards/items
+
+// need to finish hand/cards/items -- done i think, need to rewire
 // Start on the door deck for the actual game
 
 
@@ -37,6 +37,11 @@ $(document).ready(function () {
   //pulls in all players in the DB for selection (this should be log in or something, but testing this will work)
   getPlayers();
 
+
+  // function when player uses card from hand to play to items
+  // grabs current static player and data stored on the button of the item
+  // then runs api call to create/update that players items
+  // runs either updatePlayerItem() or addPlayerItem
   function handleItemCard() {
 
     var cardNumberSelected = $(this).attr("id").substring(4);
@@ -59,7 +64,7 @@ $(document).ready(function () {
     if (updating) {
       // item.id = postId;
       updatePlayerItem(newItemSpot);
-  
+
     }
     else {
       console.log("add it");
@@ -69,6 +74,7 @@ $(document).ready(function () {
 
   }
 
+  //calls the api to insert new row into table PlayerItem then calls deleteFromHand to remove card
   function addPlayerItem(item) {
 
     $.post("/api/playerItems/", item, function () {
@@ -76,15 +82,18 @@ $(document).ready(function () {
 
   }
 
- function updatePlayerItem(item) {
+  //calls the api to updates players item to new item then calls deleteFromHand to remove card
+
+  function updatePlayerItem(item) {
     $.ajax({
       method: "PUT",
       url: "/api/playerItems",
       data: item
     })
-    .done(deleteFromHand);
+      .done(deleteFromHand);
   }
 
+  //removes card from players hand and then updates items and hand
   function deleteFromHand() {
     if (cardPlayed) {
       $.ajax({
@@ -99,11 +108,22 @@ $(document).ready(function () {
     }
   }
 
-//handle to display the items a player has out
+  //---------- needs update call if no item in slot
+  //handle to display the items a player has out
+  //calls api to get items associated with that player
   function updateItems() {
     console.log('updating Items for', selectedPlayerID);
     $.get("/api/playerItems/" + selectedPlayerID, function (data) {
-      console.log("item update dat",data);
+      //will use this to track items player has
+      var spotsTaken = {
+        armor: false,
+        weapon: false,
+        ship: false,
+        aide: false
+      }
+
+      console.log("item update data", data);
+      
       if (data) {
         for (var i in data) {
           var selectedItemSpot;
@@ -123,7 +143,7 @@ $(document).ready(function () {
               break;
           }
           $("#" + selectedItemSpot + "Out").text("You have a " + data[i].Item.name + ". This gives you +" + data[i].Item.bonus);
-         
+
         }
       }
 

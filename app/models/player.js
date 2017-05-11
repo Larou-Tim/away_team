@@ -3,7 +3,15 @@ module.exports = function (sequelize, DataTypes) {
 
         name: DataTypes.STRING,
         level: DataTypes.INTEGER,
-        effectiveLevel: DataTypes.INTEGER
+        effectiveLevel: DataTypes.INTEGER,
+        race: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        class: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
     },
         {
             classMethods: {
