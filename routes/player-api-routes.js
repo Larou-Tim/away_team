@@ -37,12 +37,13 @@ module.exports = function (app) {
 
 
 
-  app.get("/api/playerItems/:id", function (req, res) {
+  app.get("/api/playerItems/:playerid", function (req, res) {
 
-    db.Player.findOne({
-      include: [db.PlayerItem],
+    db.PlayerItem.findAll({
+      include: [db.Item],
       where: {
-        id: req.params.id
+        PlayerId: req.params.playerid
+   
       }
     }).then(function (dbPlayerItem) {
       // console.log(dbPlayerItem);
@@ -52,18 +53,18 @@ module.exports = function (app) {
 
 
 
-  app.get("/api/playerItems/:id", function (req, res) {
+  // app.get("/api/playerItems/:id", function (req, res) {
 
-    db.Player.findOne({
-      include: [db.PlayerHand],
-      where: {
-        id: req.params.id
-      }
-    }).then(function (dbPlayerHand) {
-      // console.log(dbPlayerItem);
-      res.json(dbPlayerHand);
-    });
-  });
+  //   db.Player.findOne({
+  //     include: [db.PlayerHand],
+  //     where: {
+  //       id: req.params.id
+  //     }
+  //   }).then(function (dbPlayerHand) {
+  //     // console.log(dbPlayerItem);
+  //     res.json(dbPlayerHand); 
+  //   });
+  // });
 
 
 

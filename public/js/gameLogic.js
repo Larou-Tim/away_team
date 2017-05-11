@@ -1,9 +1,18 @@
+// need to bring in the other DBs
+// need to reorg our file structure
+// need to finish hand/cards/items
+// Start on the door deck for the actual game
+
+
+
 $(document).ready(function () {
   var nameInput = $("#player-name");
   // var player = new Player("Test");
   var awayMissionDeck = [];
   var selectedPlayerID;
   var selectedPlayerEffectiveLevel;
+
+  //not used? might want to go back to constructors?
   var player;
 
   var cardPlayed;
@@ -21,21 +30,19 @@ $(document).ready(function () {
   getPlayers();
 
   function handleItemCard() {
-    console.log("handleItemCard")
+  
     var cardNumberSelected = $(this).attr("id").substring(4);
-    var selectedItemSpot = $(this).attr("itemSpot");
+    var selectedItemSpot = $(this).attr("itemspot");
 
     var newItemSpot = {
       ItemId: cardNumberSelected,
-      itemSpot: selectedItemSpot,
+      spot: selectedItemSpot,
       PlayerId: selectedPlayerID
     };
 
     cardPlayed = cardNumberSelected;
-    // $(this).parent().parent().remove()
-
-
-
+  
+  //add or update to playersItemsOut
     // if (updating) {
     //   item.id = postId;
     //   updatePost(newPost);
@@ -61,18 +68,21 @@ $(document).ready(function () {
       })
         .done(function () {
           updateHand();
+          updateItems();
           cardPlayed = ""
         });
     }
   }
 
   function updateItems() {
+    console.log('updating Items for', selectedPlayerID);
     $.get("/api/playerItems/" + selectedPlayerID, function (data) {
+      console.log(data);
       if (data) {
-        for (var i in data.PlayerItems) {
+        for (var i in data) {
           var selectedItemSpot;
           // console.log(data.PlayerItems[i])
-          switch (data.PlayerItems[i].itemSpot) {
+          switch (data[i].Item.spot) {
             case "Weapon":
               selectedItemSpot = "weapon";
               break;
@@ -86,7 +96,7 @@ $(document).ready(function () {
               selectedItemSpot = "ship";
               break;
           }
-          $("#" + selectedItemSpot + "Out").text("I need the card thing");
+          $("#" + selectedItemSpot + "Out").text("You have a "+ data[i].Item.name + ". This gives you +" + data[i].Item.bonus);
         }
       }
 
@@ -139,13 +149,13 @@ $(document).ready(function () {
   //i want this shifted to a db pull to pull from table player hand
   function getItemCard(cards) {
     $("#playersHand").empty()
-    console.log(cards);
+    // console.log(cards);
 
     if (cards.length) {
       for (var i in cards) {
-        console.log("card search", cards[i].ItemId)
+        // console.log("card search", cards[i].ItemId)
         $.get("/api/items/" + cards[i].ItemId, function (data) {
-
+            // console.log("card data ------- ", data);
           var cardCol = $("<div>");
           cardCol.attr("class", "col s12 m3");
 
@@ -178,7 +188,9 @@ $(document).ready(function () {
           var cardActionButton = $("<a>");
           cardActionButton.attr("href", "#!");
           cardActionButton.attr("class", "btn waves-effect waves-teal cardPlay");
-          cardActionButton.attr("id", "card" + cards[i].ItemId);
+          //this is not adding correct card
+          // console.log("Card is", data.name ,data.ItemId,)
+          cardActionButton.attr("id", "card" + data.id);
           cardActionButton.attr("itemSpot", data.spot)
           cardActionButton.text("Play Card");
           cardActionDiv.append(cardActionButton);
@@ -224,7 +236,7 @@ $(document).ready(function () {
     // player = new Player(selectedPlayerID);
 
     updateHand()
-
+    updateItems();
   }
 
   //should probably be a back end call if i can figure that out
@@ -246,9 +258,6 @@ $(document).ready(function () {
 
 
   //pulls cards from item DB
-
-
- 
 
   //----------------------------------------
   function shuffleDeck(cards, deck) {
