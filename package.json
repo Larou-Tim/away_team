@@ -11,13 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "materialize-css": "^0.98.2",
     "method-override": "^2.3.8",
     "mysql": "^2.13.0",
+    "pg": "^6.1.5",
     "sequelize": "^3.30.4"
-
   }
 }
