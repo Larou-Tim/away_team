@@ -22,13 +22,11 @@ $(document).ready(function () {
   var player;
 
   var cardPlayed;
-  // this is a work around until i learn to push in args
-  var playersCurrentCards = []
 
   $(document).on("submit", "#player-form", handleNewPlayer);
   $(document).on("click", "#newGame", handleNewGame);
-  $(document).on("click", ".playerSelect", selectPlayer);
-  $(document).on("click", "#drawFive", drawFiveCards);
+  // $(document).on("click", ".playerSelect", selectPlayer);
+  // $(document).on("click", "#drawFive", drawFiveCards);
   $(document).on("click", ".cardPlay", handleItemCard);
   $(document).on("click", "#awayMission", handleAwayMission);
 
@@ -103,6 +101,7 @@ $(document).ready(function () {
   }
 
   function handleAwayMission() {
+    console.log('handling mission')
 
     $.get("/api/door/", function (data) {
       $("#awayTitle").text(data[0].name + " Level " + data[0].level)
@@ -128,9 +127,6 @@ $(document).ready(function () {
 
       newFabRun.append(newFabRunIcon);
       $("#awayMissionInner").append(newFabRun);
-
-
-
 
     });
   }
@@ -199,7 +195,6 @@ $(document).ready(function () {
         });
     }
   }
-
 
   function calcEffectiveLevel() {
     var bonus = {
@@ -301,11 +296,18 @@ $(document).ready(function () {
   // A function for creating an author. Calls getAuthors upon completion
   function upsertPlayer(playerData) {
     // console.log("Running post", playerData);
-    $.post("/api/players", playerData)
-      .then(getPlayers);
+    $.post("/api/players", playerData, function (data) {
+      // console.log(data);
+      selectedPlayerID = data.id
+
+    }).then(function () {
+      drawNCards(4);
+    });
+
   }
 
-  // adds all players to drop down
+  //function removed___________________________________________________
+  // adds all players to drop down 
   function getPlayers() {
 
     $.get("/api/players", function (data) {
@@ -421,7 +423,7 @@ $(document).ready(function () {
   }
 
   function updateHand() {
-
+    $("#playersHand").empty();
     $.get("/api/playerHand/" + selectedPlayerID, function (data) {
       // console.log("handData", data);
 
@@ -476,132 +478,77 @@ $(document).ready(function () {
   }
 
   function drawNCards(n) {
-    for (var i = 0; i < n; i++) {
-      var cardNumber = awayMissionDeck.shift();
-      // getItemCard(cardNumber);
-      addToPlayerHand(cardNumber);
-    }
-    updateHand();
+    $.get("/api/treasure/" + n, function (data) {
+
+      for (var i = 0; i < data.length; i++) {
+
+        // getItemCard(cardNumber);
+        addToPlayerHand(data[i].id);
+      }
+      updateHand();
+    });
   }
 
-  function drawFiveCards() {
-    for (var i = 0; i < 5; i++) {
-      var cardNumber = awayMissionDeck.shift();
-      // getItemCard(cardNumber);
-      addToPlayerHand(cardNumber);
-    }
-    updateHand();
-  }
+  // function drawFiveCards() {
+  //   for (var i = 0; i < 5; i++) {
+  //     var cardNumber = awayMissionDeck.shift();
+  //     // getItemCard(cardNumber);
+  //     addToPlayerHand(cardNumber);
+  //   }
+  //   updateHand();
+  // }
 
   //pulls cards from item DB
   //----------------------------------------
-  function shuffleDeck(cards, deck) {
-    //want to look into peoples hands and remove those numbers
-    // deck.empty();
-    // var cardsOut = [];
-    // if (players) {
-    //     for (var i = 0; i < players.length; i++) {
-    //         for (var j = 0; j < players[i].hand.length; j++) {
-    //             cardsOut.push(players[i].hand[j]);
-    //         }
-    //     }
-    // }
-    // console.log(cardsOut);
+  // function shuffleDeck(cards, deck) {
+  //   //want to look into peoples hands and remove those numbers
+  //   // deck.empty();
+  //   // var cardsOut = [];
+  //   // if (players) {
+  //   //     for (var i = 0; i < players.length; i++) {
+  //   //         for (var j = 0; j < players[i].hand.length; j++) {
+  //   //             cardsOut.push(players[i].hand[j]);
+  //   //         }
+  //   //     }
+  //   // }
+  //   // console.log(cardsOut);
 
-    for (var i = 1; i <= cards; i++) {
-      // var index = cardsOut.indexOf(i);
-      // if (index == -1) {
-      deck.push(i);
-      // }
-    }
-    // console.log(deck, "before random");
-    shuffle(deck);
-    // console.log(deck);
-  }
+  //   for (var i = 1; i <= cards; i++) {
+  //     // var index = cardsOut.indexOf(i);
+  //     // if (index == -1) {
+  //     deck.push(i);
+  //     // }
+  //   }
+  //   // console.log(deck, "before random");
+  //   shuffle(deck);
+  //   // console.log(deck);
+  // }
 
-  //randomize the order of the 'cards' in the deck
-  function shuffle(array) {
-    var i = 0
-      , j = 0
-      , temp = null;
+  // //randomize the order of the 'cards' in the deck
+  // function shuffle(array) {
+  //   var i = 0
+  //     , j = 0
+  //     , temp = null;
 
-    for (i = array.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1));
-      temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-  }
+  //   for (i = array.length - 1; i > 0; i--) {
+  //     j = Math.floor(Math.random() * (i + 1));
+  //     temp = array[i];
+  //     array[i] = array[j];
+  //     array[j] = temp;
+  //   }
+  // }
 
-  //*********** not used */
-  var Player = function (id) {
-    this.playerID = id;
-    this.level = 1;
-    this.race = 'Human';
-    this.weapon;
-    this.armor;
-    this.ship;
-    this.aide;
-    this.class = 'None';
-    this.cardsOut = [];
-    this.hand = [];
-    this.drawCard = function (deck) {
-      console.log("Hello");
-      var cardNumber = deck.shift();
-      var tempObj = {}
+  // //*********** not used */
 
-
-
-      $.get("/api/players", function (data) {
-
-      });
-
-      db.Item.findOne({ where: { id: cardNumber } }).done(function (dbItem) {
-
-        // var tempObj = {}
-        tempObj.name = dbItem.name;
-        tempObj.bonus = dbItem.bonus;
-        tempObj.itemNumber = dbItem.id;
-        // console.log(tempObj);
-        // this.hand.push(tempObj);
-      });
-      this.hand.push(tempObj);
-      //query DB
-      // var cardIndex = findWithAttr(test, "itemNumber", cardNumber);
-      // var card = test[cardIndex];
-      // this.hand.push(card);
-    }
-    this.addItem = function (number) {
-      var itemIndex = findWithAttr(itemDeck, itemNumber, number);
-      this.effectiveLevel += itemDeck[itemIndex].bonus;
-      this[itemDeck[itemIndex].itemType] = itemIndex;
-    }
-
-    this.calcEffectiveLevel = function () {
-      var effectiveLevel = this.level;
-      for (var i in this.cardsOut) {
-        console.log(this.cardsOut[i])
-        effectiveLevel += this.cardsOut[i].bonus
-      }
-      return effectiveLevel;
-    }
-    this.playCard = function (card) {
-      //remove frome hand array and either immediate or add to 
-    }
-    this.showHand = function () {
-      console.log(this.hand);
-    }
-  }
-
-  function findWithAttr(array, attr, value) {
-    for (var i = 0; i < array.length; i += 1) {
-      if (array[i][attr] === value) {
-        return i;
-      }
-    }
-    return -1;
-  }
-  //----------------------------------------
+  // function findWithAttr(array, attr, value) {
+  //   for (var i = 0; i < array.length; i += 1) {
+  //     if (array[i][attr] === value) {
+  //       return i;
+  //     }
+  //   }
+  //   return -1;
+  // }
+  // //----------------------------------------
 
 });
 

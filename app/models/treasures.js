@@ -1,3 +1,5 @@
+//not used
+
 module.exports = function(sequelize, DataTypes) {
   var Treasures = sequelize.define("Treasures", {
     name: {
