@@ -9,7 +9,7 @@
 
 
 $(document).ready(function () {
-
+  $('.modal').modal()
   var nameInput = $("#player-name");
   // var player = new Player("Test");
   var awayMissionDeck = [];
