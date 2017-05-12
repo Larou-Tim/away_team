@@ -2,7 +2,7 @@
 <html>
 
 <head>
-
+    <title>Away Team</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
    
@@ -14,12 +14,32 @@
 </head>
 
 <body>
+  <nav>
+    <div class="nav-wrapper blue">
+        <form class="left" id="player-form">
+            <!--<div class="row">-->
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input id="player-name" type="text" class="validate">
+                    <label for="player-name">Player Name</label>
+                <!--</div>-->
+            </div>
+        </form>
+        <a href="#" class="brand-logo center">Away Team</a>
 
+      <!--<a href="#" class="brand-logo">Logo</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="sass.html">Sass</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">JavaScript</a></li>
+      </ul>-->
+    </div>
+  </nav>
     <!--<a class="btn-floating btn-large waves-effect waves-light red" onclick=" $('.tap-target').tapTarget('open')"><i class="material-icons">add</i></a>
      -->
+            <a id="menu" class="waves-effect waves-light btn btn-floating cyan right" onclick=" $('.tap-target').tapTarget('open')"><i class="material-icons">info_outline</i></a>
 
     <!-- Element Showed -->
-    <a id="menu" class="waves-effect waves-light btn btn-floating cyan" onclick=" $('.tap-target').tapTarget('open')"><i class="material-icons">info_outline</i></a>
 
     <!-- Tap Target Structure -->
     <div class="tap-target cyan" data-activates="menu">
@@ -32,18 +52,6 @@
                 <br>
             </p>
         </div>
-    </div>
-
-    <div class="row">
-        <form class="col s6" id="player-form">
-            <div class="row">
-                <div class="input-field col s6">
-                    <i class="material-icons prefix">account_circle</i>
-                    <input id="player-name" type="text" class="validate">
-                    <label for="player-name">Player Name</label>
-                </div>
-            </div>
-        </form>
     </div>
 
     <div class="row">
@@ -87,15 +95,9 @@
     </div>
 
     <div class="row">
-
         <div id="playersHand">
-
         </div>
-
     </div>
-
-
-
 
     <!-- Modal Trigger -->
     <!--<a class="waves-effect waves-light btn" href="#modal1">Modal</a>-->
