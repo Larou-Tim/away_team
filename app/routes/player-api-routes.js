@@ -126,8 +126,6 @@ module.exports = function (app) {
     });
   });
 
-
-
   app.post("/api/playerHand", function (req, res) {
     // console.log("ReqBody", req.body)
     db.PlayerHand.create(req.body).then(function (dbHand) {

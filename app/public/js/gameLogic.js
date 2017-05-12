@@ -1,11 +1,9 @@
 // 
 // update rikers beard img
 
-//issue when you win, does not correctly display cards
-//issue on death it doesn't let you keep playing
-//issue curse not reseting away mission
-
-
+//Error: Only on card play does it correctly refresh playersHand
+//issue on death game requires refresh to continue (maybe just force refresh?)
+//should i do front end or should i do hall of heros?
 
 //spit player - api - routes
 
@@ -17,11 +15,9 @@
 $(document).ready(function () {
   $('.modal').modal()
   var nameInput = $("#player-name");
-  // var player = new Player("Test");
   var awayMissionDeck = [];
   var selectedPlayerID;
   var selectedPlayerEffectiveLevel;
-
 
   //used to determine if item should be a post/put
   var playerCurrentItems = {
@@ -31,59 +27,43 @@ $(document).ready(function () {
     Aide: false
   }
 
-  //not used? might want to go back to constructors?
-  var player;
-
   var cardPlayed;
 
+// when player enters their name
   $(document).on("submit", "#player-form", handleNewPlayer);
-  // $(document).on("click", "#newGame", handleNewGame);
+  // when a player uses a card in their 'hand'
   $(document).on("click", ".cardPlay", handleItemCard);
+  // when a player clicks on the away mission card
   $(document).on("click", "#awayMission", handleAwayMission);
+  //if a player decides to fight a monster
   $(document).on("click", "#fight", handleFight);
+  // if a player decides to run away from a monster
   $(document).on("click", "#runaway", handleRun)
+  // only choice for when a curse shows up
   $(document).on("click", "#resolve", handleCurse);
-
-  //pulls in all players in the DB for selection (this should be log in or something, but testing this will work)
-  getPlayers();
-
 
   // Cards in hand constructor
   function getItemCard(cards) {
     $("#playersHand").empty()
-    // console.log(cards);
-
     if (cards.length) {
       for (var i in cards) {
-        // console.log("card search", cards[i].ItemId)
         $.get("/api/items/" + cards[i].ItemId, function (data) {
-          // console.log("card data ------- ", data);
           var cardCol = $("<div>");
           cardCol.attr("class", "col s12 m3");
-
           var cardDiv = $("<div>");
           cardDiv.attr("class", "card");
           cardDiv.attr("id", "item-card")
-
-
           var cardImageDiv = $("<div>");
-
-
           cardImageDiv.attr("class", "card-image");
           var cardImage = $("<img>");
           cardImage.attr("id", "item-image")
           cardImage.attr("src", "images/" + data.image);
           cardImageDiv.append(cardImage);
-
           var cardTitle = $("<span>");
           cardTitle.text(data.name);
           cardTitle.attr("class", "card-title")
           cardTitle.attr("id", "item-title")
           cardImageDiv.append(cardTitle);
-
-
-
-          // ------ card fab instead of button
 
           var cardActionButton = $("<a>");
           cardActionButton.attr("class", "btn-floating halfway-fab waves-effect waves-light teal cardPlay");
@@ -108,7 +88,6 @@ $(document).ready(function () {
           cardContentDiv.append(cardBonus);
 
           var cardContentText = $("<p>");
-          //need item spot
           cardContentText.text(data.description);
           cardContentDiv.append(cardContentText);
 
@@ -116,7 +95,6 @@ $(document).ready(function () {
 
           cardCol.append(cardDiv)
           $("#playersHand").append(cardCol);
-
 
         });
       }
@@ -126,16 +104,11 @@ $(document).ready(function () {
 
   // constructor to make updates on what item a player has played
   function updateItems() {
-    console.log('updating Items for playerID', selectedPlayerID);
+  
     $.get("/api/playerItems/" + selectedPlayerID, function (data) {
-
-
-      console.log("item update data", data);
-
       if (data) {
         for (var i in data) {
           var selectedItemSpot;
-          // console.log(data.PlayerItems[i])
           switch (data[i].Item.spot) {
             case "Weapon":
               selectedItemSpot = "weapon";
@@ -170,7 +143,6 @@ $(document).ready(function () {
     $.get("/api/door/", function (data) {
 
       if (data[0].type == 'curse') {
-        console.log("add curse")
         var newFabResolve = $("<a>");
         newFabResolve.attr("class", "btn-floating halfway-fab waves-effect waves-light pink");
         newFabResolve.attr("id", "resolve");
@@ -184,7 +156,6 @@ $(document).ready(function () {
 
       }
       else {
-        console.log("handle fight");
         var newFabFight = $("<a>");
         newFabFight.attr("class", "btn-floating halfway-fab waves-effect waves-light green");
         newFabFight.attr("id", "fight");
@@ -217,16 +188,18 @@ $(document).ready(function () {
 
   //handle when a player clicks on the curse button
   function resolveCurse(curse) {
-    console.log("The curse is", curse);
     /* first handle the removal effect by pulling in all players items
      and removing the one that corresponds to the curse category */
 
     if (curse.effect == "remove") {
+
       $.get("/api/playerItems/" + selectedPlayerID, function (data) {
+        console.log("Removing an Item")
         for (var i in data) {
           if (data[i].Item.spot == curse.category) {
+            
             var deletedItemId = data[i].Item.id;
-
+            console.log("removing item",deletedItemId," because it is",data[i].Item.spot )
             $.ajax({
               method: "DELETE",
               url: "/api/playerItems/" + selectedPlayerID + "/" + deletedItemId
@@ -285,7 +258,6 @@ $(document).ready(function () {
     $.get("/api/players/" + selectedPlayerID, function (data) {
       playerLevel = data[0].effectiveLevel;
       $.get("/api/doors/" + doorCard, function (data) {
-        console.log("---------- Door data", data)
         enemyLevel = data[0].level;
         reward = data[0].treasure;
         if (playerLevel > enemyLevel) {
@@ -309,13 +281,7 @@ $(document).ready(function () {
           handleLoss();
         }
       });
-
     });
-
-
-
-
-
   }
 
   function handleLoss() {
@@ -347,7 +313,6 @@ $(document).ready(function () {
   /* updates the players level for winning a fight or getting it witha curse this will not allow a player to drop below level 1, curses will not 'kill' a player */
   function updatePlayerLevel(levels) {
     $.get("/api/players/" + selectedPlayerID, function (data) {
-      console.log("player Data ---", data)
       var playerCurrentLevel = data[0].level;
 
       playerCurrentLevel += levels;
@@ -376,14 +341,14 @@ $(document).ready(function () {
           }
         });
          $("#playersHand").empty();
-        updateHand()
+   
         updateItems();
         calcEffectiveLevel()
       }
 
     }).done(function () {
        $("#playersHand").empty();
-      updateHand();
+
       updateItems();
       resetAwayCard();
     });
@@ -456,6 +421,7 @@ $(document).ready(function () {
     }
   }
 
+//runs through all items a player has and their current level to calc
   function calcEffectiveLevel() {
     var bonus = {
       level: 1,
@@ -523,9 +489,9 @@ $(document).ready(function () {
 
   // A function for creating an author. Calls getAuthors upon completion
   function upsertPlayer(playerData) {
-    // console.log("Running post", playerData);
+
     $.post("/api/players", playerData, function (data) {
-      // console.log(data);
+
       selectedPlayerID = data.id
 
     }).then(function () {
@@ -534,62 +500,35 @@ $(document).ready(function () {
 
   }
 
-  //function removed___________________________________________________
-  // adds all players to drop down 
-  function getPlayers() {
-
-    $.get("/api/players", function (data) {
-      for (var i = 0; i < data.length; i++) {
-        var playerList = $("<li>");
-        var playerAnchor = $("<a>")
-        playerAnchor.attr("href", "#!");
-        playerAnchor.attr("id", "player" + data[i].id);
-        playerAnchor.attr("class", "playerSelect");
-        playerAnchor.text(data[i].name);
-        playerList.append(playerAnchor);
-        $("#playerDropdown").append(playerList);
-      }
-    });
-  }
-
 
   function addToPlayerHand(cardID) {
-    console.log("card to add to hand", cardID)
     var newCard = {
-      // itemSpot: false,
       ItemId: cardID,
       PlayerId: parseInt(selectedPlayerID)
     };
-    console.log(newCard);
     $.post("/api/playerHand/", newCard, function () {
     });
   }
 
   function updateHand() {
-    console.log("Update used");
+    console.log("Update is called")
     $("#playersHand").empty();
     $.get("/api/playerHand/" + selectedPlayerID, function (data) {
-      // console.log("handData", data);
-
       getItemCard(data)
-
     });
   }
 
-  //updates dropdown for selected player and grabs that players ID for use
+  //used if another player is selected
   function selectPlayer() {
     $("#playerSelectDrop").text($(this).text());
     selectedPlayerID = $(this).attr("id").substring(6);
-    //-**** add get method to pull in seleceted players eLevel
-    // player = new Player(selectedPlayerID);
-
+  
     updateHand()
     updateItems();
   }
 
-
+// refreshes away mission card after resolving its effects
   function resetAwayCard() {
-    console.log("reset called")
     $("#awayMissionInner").empty();
 
     var awayImg = $("<img>");
@@ -614,6 +553,7 @@ $(document).ready(function () {
 
   }
 
+// function to drawn a random card from the api
   function drawNCards(n) {
     $.get("/api/treasure/" + n, function (data) {
 

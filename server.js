@@ -69,7 +69,7 @@ function createData() {
   ]);
 
   db.Door.bulkCreate([
-    { name: 'The Grand Inquisitor', type: 'monster', level: 5, treasure: 2, description: '"I\'ll show you things far more frightening than death...like my Luke-Leia fanfic"', image: 'door1.jpg' },
+    { name: 'The Grand Inquisitor', type: 'monster', level: 5, treasure: 2, description: '"I\'ll show you things far more frightening than death...like my Luke-Leia fanfic"', image: 'door1.png' },
     { name: 'Xenomorph', type: 'monster', level: 7, treasure: 2, description: '"HHSSSSS...."', image: 'door2.jpg' },
     { name: 'Khan', type: 'monster', level: 10, treasure: 2, description: '"You? Perhaps I no longer need to try."', image: 'door3.jpg' },
     { name: 'A bunch of Daleks', type: 'monster', level: 1, treasure: 1, description: 'Exterminate!', image: 'door4.jpg' },
