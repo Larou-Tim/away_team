@@ -6,7 +6,7 @@ module.exports = function (app) {
     //Query to populate players hand when the game starts
     db.Door.findAll({
       limit: 1,
-      order: [Sequelize.fn('RAND')]
+      order: [Sequelize.fn('RANDOM')]
     }).then(function (dbHand) {
       res.json(dbHand);
     });

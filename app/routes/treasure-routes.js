@@ -6,7 +6,7 @@ module.exports = function (app) {
     //Query to draw a treasure card
     db.Item.findAll({
       limit: parseInt(req.params.amount),
-      order: [Sequelize.fn('RAND')]
+      order: [Sequelize.fn('RANDOM')]
     }).then(function (dbDrawTreasure) {
       res.json(dbDrawTreasure);
     });
