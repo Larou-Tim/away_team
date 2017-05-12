@@ -102,7 +102,7 @@ module.exports = function (app) {
 
 
   app.put("/api/playerItems", function (req, res) {
-    console.log("update query", req.body)
+ 
     db.PlayerItem.update(
       req.body,
       {
@@ -116,6 +116,7 @@ module.exports = function (app) {
   });
 
   app.delete("/api/playerItems/:itemId/:playerId", function (req, res) {
+  
     db.PlayerItem.destroy({
       where: {
         ItemId: req.params.itemId,

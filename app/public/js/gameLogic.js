@@ -29,7 +29,7 @@ $(document).ready(function () {
 
   var cardPlayed;
 
-// when player enters their name
+  // when player enters their name
   $(document).on("submit", "#player-form", handleNewPlayer);
   // when a player uses a card in their 'hand'
   $(document).on("click", ".cardPlay", handleItemCard);
@@ -104,26 +104,53 @@ $(document).ready(function () {
 
   // constructor to make updates on what item a player has played
   function updateItems() {
-  
+
     $.get("/api/playerItems/" + selectedPlayerID, function (data) {
+      //reset var for use
+      playerCurrentItems = {
+        Weapon: false,
+        Armor: false,
+        Ship: false,
+        Aide: false
+      }
+
       if (data) {
         for (var i in data) {
           var selectedItemSpot;
           switch (data[i].Item.spot) {
             case "Weapon":
               selectedItemSpot = "weapon";
+              playerCurrentItems.Weapon = true;
               break;
             case "Armor":
               selectedItemSpot = "armor";
+              playerCurrentItems.Armor = true;
               break;
             case "Helper":
               selectedItemSpot = "helper";
+              playerCurrentItems.Helper = true;
               break;
             case "Ship":
               selectedItemSpot = "ship";
+              playerCurrentItems.Ship = true;
               break;
           }
+
+
           $("#" + selectedItemSpot + "Out").text("You have a " + data[i].Item.name + ". This gives you +" + data[i].Item.bonus);
+
+          if(!playerCurrentItems.Weapon) {
+             $("#weaponOut").text("You don't have a weapon.");
+          }
+          if(!playerCurrentItems.Armor) {
+             $("#armorOut").text("You don't have armor.");
+          }
+          if(!playerCurrentItems.Ship) {
+             $("#shipOut").text("You don't have a ship.");
+          }
+          if(!playerCurrentItems.Helper) {
+             $("#helperOut").text("You don't have a helper.");
+          }
 
         }
       }
@@ -194,16 +221,17 @@ $(document).ready(function () {
     if (curse.effect == "remove") {
 
       $.get("/api/playerItems/" + selectedPlayerID, function (data) {
-        console.log("Removing an Item")
+
         for (var i in data) {
           if (data[i].Item.spot == curse.category) {
-            
+
             var deletedItemId = data[i].Item.id;
-            console.log("removing item",deletedItemId," because it is",data[i].Item.spot )
+            console.log("removing item", deletedItemId, " because it is", data[i].Item.spot)
             $.ajax({
               method: "DELETE",
-              url: "/api/playerItems/" + selectedPlayerID + "/" + deletedItemId
+              url: "/api/playerItems/" + deletedItemId + "/" + selectedPlayerID
             }).done(function () {
+
               $("#playersHand").empty();
               updateHand();
               updateItems();
@@ -340,14 +368,14 @@ $(document).ready(function () {
             level: playerCurrentLevel
           }
         });
-         $("#playersHand").empty();
-   
+
+
         updateItems();
         calcEffectiveLevel()
       }
 
     }).done(function () {
-       $("#playersHand").empty();
+
 
       updateItems();
       resetAwayCard();
@@ -413,7 +441,7 @@ $(document).ready(function () {
         url: "/api/playerHand/" + cardPlayed + "/" + selectedPlayerID
       })
         .done(function () {
-           $("#playersHand").empty();
+          $("#playersHand").empty();
           updateHand();
           updateItems();
           cardPlayed = ""
@@ -421,7 +449,7 @@ $(document).ready(function () {
     }
   }
 
-//runs through all items a player has and their current level to calc
+  //runs through all items a player has and their current level to calc
   function calcEffectiveLevel() {
     var bonus = {
       level: 1,
@@ -522,12 +550,12 @@ $(document).ready(function () {
   function selectPlayer() {
     $("#playerSelectDrop").text($(this).text());
     selectedPlayerID = $(this).attr("id").substring(6);
-  
+
     updateHand()
     updateItems();
   }
 
-// refreshes away mission card after resolving its effects
+  // refreshes away mission card after resolving its effects
   function resetAwayCard() {
     $("#awayMissionInner").empty();
 
@@ -553,7 +581,7 @@ $(document).ready(function () {
 
   }
 
-// function to drawn a random card from the api
+  // function to drawn a random card from the api
   function drawNCards(n) {
     $.get("/api/treasure/" + n, function (data) {
 
@@ -562,8 +590,8 @@ $(document).ready(function () {
         // getItemCard(cardNumber);
         addToPlayerHand(data[i].id);
       }
-      updateHand();
-    });
+
+    }).done(updateHand);
   }
 
 });
