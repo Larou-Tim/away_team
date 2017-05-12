@@ -28,13 +28,9 @@ require("./app/routes/card-api-routes.js")(app);
 require("./app/routes/doors-routes.js")(app);
 require("./app/routes/treasure-routes.js")(app);
 
-// db.Player.belongsToMany(db.Item, { through: db.PlayerItem });
-// db.Item.belongsToMany(db.Player, { through: db.PlayerItem });
-
 // Syncing our sequelize models and then starting our express app
 db.sequelize.sync({ force: true }).then(function () {
   app.listen(PORT, function () {
-    console.log("App listening on PORT " + PORT);
     createData();
 
   });
@@ -43,7 +39,7 @@ db.sequelize.sync({ force: true }).then(function () {
 function createData() {
   db.Item.bulkCreate([
     { name: "Lightsaber", spot: 'Weapon', bonus: 2, description: 'Your father\'s lightsaber. Better point it at your eye and look directly into it.', image: 'item1.jpg' },
-    { name: 'Phaser', spot: 'Weapon', bonus: 1, description: 'Set phasers to fun, am I right?',  image: '.item2.jpg' },
+    { name: 'Phaser', spot: 'Weapon', bonus: 1, description: 'Set phasers to fun, am I right?',  image: 'item2.jpg' },
     { name: 'Noisy Cricket', spot: 'Weapon', bonus: 2, description: 'Small but powerful. Basically the opposite of your mom.',  image: 'item3.jpg' },
     { name: 'Ronan\'s Universal Weapon', spot: 'Weapon', bonus: 4, description: 'Ronan\'s totally-not-overpowered hammer. It can only manipulate matter, generate force fields, grant interstellar teleportation....',  image: 'item4.png' },
     { name: 'Zorg\'s ZF-1', spot: 'Weapon', bonus: 3, description: 'Contains rocket launcher, arrow launcher, net launcher, flamethrower (my favorite), replay system, and Zorg\'s patented "Replay" system.',  image: 'item5.jpg' },
@@ -102,21 +98,21 @@ function createData() {
     { name: 'Sarlacc', type: 'monster', level: 9, treasure: 2, description: '"Wbbbgggrrgggrrlll *Chomp* *Chomp*"', image: 'door27.png' },
     { name: 'Baron Harkonnen', type: 'monster', level: 5, treasure: 1, description: '"He who controls the spice, controls the eff-you-niverse!"', image: 'door28.jpg' },
     { name: 'Matt Damon in Interstellar', type: 'monster', level: 1, treasure: 0, description: '"You can trust me I\'m totally not a backstabbing douche."', image: 'door29.jpg' }, 
-    { name: 'Eww! Stepped in alien goo', type: 'curse', effect: 'remove', category: 'armor', description: 'Your clothes have been dissolved!', image: 'door30.jpg'},
-    { name: 'Missing ";" in Transporter code', type: 'curse', effect: 'remove', category: 'armor', description: 'An error in the Transporter code caused you to be teleported without your armor!', image: 'door31.jpg'},
+    { name: 'Eww! Stepped in alien goo', type: 'curse', effect: 'remove', category: 'Armor', description: 'Your clothes have been dissolved!', image: 'door30.jpg'},
+    { name: 'Missing ";" in Transporter code', type: 'curse', effect: 'remove', category: 'Armor', description: 'An error in the Transporter code caused you to be teleported without your armor!', image: 'door31.jpg'},
     { name: 'Tribble Infestation!', type: 'curse', effect: '-2', category: 'player_level', description: 'The tribbles you were carrying won\'t stop procreating! Weighing and slowing you down.', image: 'door32.jpg'},
     { name: 'Stuck in a bookcase', type: 'curse', effect: '-5', category: 'player_level', description: 'Oh no! You fell into a blackhole and got stuck in a bookcase! Quick, wiggle some books around!', image: 'door33.jpg'},
-    { name: 'Hypnotoad', type: 'curse', effect: '-1', category: 'ALL GLORY TO THE HYPNOTOAD! (go back a level)', description: 'player_level', image: 'door34.gif'},
+    { name: 'Hypnotoad', type: 'curse', effect: '-1', description: 'ALL GLORY TO THE HYPNOTOAD! (go back a level)', category: 'player_level', image: 'door34.gif'},
     { name: 'Weeping Angel\'s touch', type: 'curse', effect: '-2', category: 'player_level', description: 'A Weeping Angel touches you, taking you back to yourself 2 levels ago. (not like you did a good job the first time anyway)', image: 'door35.jpg'},
-    { name: 'Hal 9000\'s sorry but he\'s afraid he cannot allow you to do that', type: 'curse', effect: '3', category: 'monster_level', description: 'Hal increases the monster\'s level by 3. He said he\'s sorry.', image: 'door36.jpg'},
-    { name: 'A "you" from a parallel universe needs to borrow your weapons ', type: 'curse', effect: 'remove', category: 'weapon', description: 'An alternate version of you takes your weapons. Fun fact, technically it\'s not stealing since they\'re his weapons too!', image: 'door37.jpg'},
+    { name: 'Hal 9000\'s sorry but he\'s afraid he cannot allow you to do that', type: 'curse', effect: 'remove', category: 'Ship', description: 'Hal locks you out of your ship. He said he\'s sorry.', image: 'door36.jpg'},
+    { name: 'A "you" from a parallel universe needs to borrow your weapons ', type: 'curse', effect: 'remove', category: 'Weapon', description: 'An alternate version of you takes your weapons. Fun fact, technically it\'s not stealing since they\'re his weapons too!', image: 'door37.jpg'},
     { name: 'A TV Exec prematurely cancels your show', type: 'curse', effect: '-9', category: 'player_level', description: 'Oh no! You had so much critical acclaim too! (Return to level 1)', image: 'door38.jpg'},
-    { name: 'Time Bandits appear and steal your weapon!', type: 'curse', effect: 'remove', category: 'weapon', description: 'A bunch of dwarves steal your weapon! You\'d probably hurt yourself with it anyway...', image: 'door39.jpg'},
-    { name: 'Excess space radiation makes the space monster, uh, bigger, also and stronger', type: 'curse', effect: '1', category: 'monster_level', description: '8th grade science, dude. LOOK IT UP.', image: 'door40.png'},
+    { name: 'Time Bandits appear and steal your weapon!', type: 'curse', effect: 'remove', category: 'Weapon', description: 'A bunch of dwarves steal your weapon! You\'d probably hurt yourself with it anyway...', image: 'door39.jpg'},
+    { name: 'Excess space radiation makes you, uh, bigger, also and stronger', type: 'curse', effect: '1', category: 'player_level', description: '8th grade science, dude. LOOK IT UP.', image: 'door40.png'},
     { name: 'Red Shirted!', type: 'curse', effect: '-9', category: 'player_level', description: 'You get turned into a Red Shirt and promptly are killed. Patrick Stewart and his exclusive clique of friends are OK so it\'s cool', image: 'door41.jpg'},
-    { name: 'Droid IOS update', type: 'curse', effect: '3', category: 'monster_level', description: 'The Federation has pushed a system update to all droid units, increasing their power. Roger Roger.', image: '.door42.jpg'},
+    { name: 'Droid OS update', type: 'curse', effect: '-3', category: 'player_level', description: 'The Federation has pushed a system update to all droid units, increasing their power. Roger Roger.', image: 'door42.jpg'},
     { name: 'Jar Jar Binks tries to help you!', type: 'curse', effect: '-1', category: 'player_level', description: 'Meesa here to helpa yous-a and meesa...you get the idea. (level is decreased by 1)', image: 'door43.jpg'},
     { name: 'Picard calls you #2', type: 'curse', effect: '-1', category: 'player_level', description: 'He always calls you #1. Have you been replaced? Has he found a new #1? (emotionally crushed for 1 level)', image: 'door44.jpg'},
-    { name: 'Weapon jam!', type: 'curse', effect: 'remove', category: 'weapon', description: 'Your weapon jams! Maybe you can talk them into a dance off. (lose weapon)', image: '.""door45.gif'}
+    { name: 'Weapon jam!', type: 'curse', effect: 'remove', category: 'Weapon', description: 'Your weapon jams! Maybe you can talk them into a dance off. (lose weapon)', image: 'door45.gif'}
   ]);
 }

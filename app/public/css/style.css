@@ -10,7 +10,7 @@ body{
   
 }
 
-#fight {
+#fight, #resolve {
   left: 10px
 }
 
@@ -18,3 +18,27 @@ body{
   left: 60px
 }
 
+#item-card {
+  height: 400px;
+}
+
+#item-image {
+  height: 250px;
+}
+
+#item-title{
+  color: cyan;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#away-title {
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#door-image {
+  height:250px;
+}
+/*items description was too low*/
+#item-content{
+      padding: 5px 24px 24px 24px;
+}

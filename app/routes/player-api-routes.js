@@ -26,7 +26,7 @@ module.exports = function (app) {
     });
   });
 
- app.put("/api/playerLevelUp/", function (req, res) {
+  app.put("/api/playerLevelUp/", function (req, res) {
 
     db.Player.update(
       req.body,
@@ -114,6 +114,19 @@ module.exports = function (app) {
         res.json(dbPlayerItem);
       });
   });
+
+  app.delete("/api/playerItems/:itemId/:playerId", function (req, res) {
+    db.PlayerItem.destroy({
+      where: {
+        ItemId: req.params.itemId,
+        PlayerId: req.params.playerId
+      }
+    }).then(function (dbPost) {
+      res.json(dbPost);
+    });
+  });
+
+
 
   app.post("/api/playerHand", function (req, res) {
     // console.log("ReqBody", req.body)

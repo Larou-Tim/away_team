@@ -1,6 +1,6 @@
 //not used
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   var Treasures = sequelize.define("Treasures", {
     name: {
       type: DataTypes.STRING,
@@ -9,14 +9,14 @@ module.exports = function(sequelize, DataTypes) {
     type: {
       type: DataTypes.STRING,
       allowNull: false
-    }, 
+    },
     effect: {
       type: DataTypes.INTEGER
-    },  
+    },
     description: {
       type: DataTypes.TEXT
     }
-  }   
+  }
   );
   return Treasures;
 };

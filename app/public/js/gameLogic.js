@@ -1,8 +1,10 @@
-// curses?
-// win logic
 // 
+// update rikers beard img
+
 //issue when you win, does not correctly display cards
 //issue on death it doesn't let you keep playing
+//issue curse not reseting away mission
+
 
 
 //spit player - api - routes
@@ -35,11 +37,12 @@ $(document).ready(function () {
   var cardPlayed;
 
   $(document).on("submit", "#player-form", handleNewPlayer);
-  $(document).on("click", "#newGame", handleNewGame);
+  // $(document).on("click", "#newGame", handleNewGame);
   $(document).on("click", ".cardPlay", handleItemCard);
   $(document).on("click", "#awayMission", handleAwayMission);
   $(document).on("click", "#fight", handleFight);
-  $(document).on("click", "#runaway", handleRun);
+  $(document).on("click", "#runaway", handleRun)
+  $(document).on("click", "#resolve", handleCurse);
 
   //pulls in all players in the DB for selection (this should be log in or something, but testing this will work)
   getPlayers();
@@ -60,15 +63,22 @@ $(document).ready(function () {
 
           var cardDiv = $("<div>");
           cardDiv.attr("class", "card");
+          cardDiv.attr("id", "item-card")
+
 
           var cardImageDiv = $("<div>");
+
+
           cardImageDiv.attr("class", "card-image");
           var cardImage = $("<img>");
-          cardImage.attr("src", "https://getmdl.io/assets/demos/welcome_card.jpg");
+          cardImage.attr("id", "item-image")
+          cardImage.attr("src", "images/" + data.image);
           cardImageDiv.append(cardImage);
 
           var cardTitle = $("<span>");
           cardTitle.text(data.name);
+          cardTitle.attr("class", "card-title")
+          cardTitle.attr("id", "item-title")
           cardImageDiv.append(cardTitle);
 
 
@@ -91,6 +101,7 @@ $(document).ready(function () {
 
           var cardContentDiv = $("<div>");
           cardContentDiv.attr("class", "card-content");
+          cardContentDiv.attr("id", "item-content");
 
           var cardBonus = $("<h5>");
           cardBonus.text("+" + data.bonus + " " + data.spot);
@@ -150,39 +161,97 @@ $(document).ready(function () {
 
   //constructor to update the away mission
   function handleAwayMission() {
-    console.log('handling mission')
+
+    // add if stmt to determine if its a monster /curse
+    // if curse only add resolve button
+    // test fields seem to change slighting on curses, so look into that
+    // resulve card will call function resolveCurse and then reset the the away card 
 
     $.get("/api/door/", function (data) {
-      $("#awayTitle").text(data[0].name + " Level " + data[0].level)
+
+      if (data[0].type == 'curse') {
+        console.log("add curse")
+        var newFabResolve = $("<a>");
+        newFabResolve.attr("class", "btn-floating halfway-fab waves-effect waves-light pink");
+        newFabResolve.attr("id", "resolve");
+        var newFabResolveIcon = $("<i>");
+        newFabResolveIcon.attr("class", "material-icons");
+        newFabResolveIcon.text("visibility");
+        newFabResolve.append(newFabResolveIcon);
+        newFabResolve.attr("doorCard", data[0].id);
+        $("#awayMissionInner").append(newFabResolve);
+        $("#away-title").text(data[0].name)
+
+      }
+      else {
+        console.log("handle fight");
+        var newFabFight = $("<a>");
+        newFabFight.attr("class", "btn-floating halfway-fab waves-effect waves-light green");
+        newFabFight.attr("id", "fight");
+        var newFabFightIcon = $("<i>");
+        newFabFightIcon.attr("class", "material-icons");
+        newFabFightIcon.text("my_location");
+        newFabFight.attr("doorCard", data[0].id);
+        newFabFight.append(newFabFightIcon);
+        $("#awayMissionInner").append(newFabFight);
+
+        var newFabRun = $("<a>");
+        newFabRun.attr("class", "btn-floating halfway-fab waves-effect waves-light orange");
+        newFabRun.attr("id", "runaway");
+        var newFabRunIcon = $("<i>");
+        newFabRunIcon.attr("class", "material-icons");
+        newFabRunIcon.text("call_missed");
+        newFabRun.attr("doorCard", data[0].id);
+        $("#away-title").text(data[0].name + " Level " + data[0].level)
+
+        newFabRun.append(newFabRunIcon);
+        $("#awayMissionInner").append(newFabRun);
+      }
+
       $("#awayContent").text(data[0].description);
       $("#awayMission").remove();
-
-      var newFabFight = $("<a>");
-      newFabFight.attr("class", "btn-floating halfway-fab waves-effect waves-light green");
-      newFabFight.attr("id", "fight");
-      var newFabFightIcon = $("<i>");
-      newFabFightIcon.attr("class", "material-icons");
-      newFabFightIcon.text("play_arrow");
-      newFabFight.attr("doorCard", data[0].id);
-
-      newFabFight.append(newFabFightIcon);
-      $("#awayMissionInner").append(newFabFight);
-
-      var newFabRun = $("<a>");
-      newFabRun.attr("class", "btn-floating halfway-fab waves-effect waves-light orange");
-      newFabRun.attr("id", "runaway");
-      var newFabRunIcon = $("<i>");
-      newFabRunIcon.attr("class", "material-icons");
-      newFabRunIcon.text("call_missed");
-      newFabRun.attr("doorCard", data[0].id);
-
-      newFabRun.append(newFabRunIcon);
-      $("#awayMissionInner").append(newFabRun);
+      $("#door-image").attr("src", "images/" + data[0].image)
 
     });
   }
 
+  //handle when a player clicks on the curse button
+  function resolveCurse(curse) {
+    console.log("The curse is", curse);
+    /* first handle the removal effect by pulling in all players items
+     and removing the one that corresponds to the curse category */
 
+    if (curse.effect == "remove") {
+      $.get("/api/playerItems/" + selectedPlayerID, function (data) {
+        for (var i in data) {
+          if (data[i].Item.spot == curse.category) {
+            var deletedItemId = data[i].Item.id;
+
+            $.ajax({
+              method: "DELETE",
+              url: "/api/playerItems/" + selectedPlayerID + "/" + deletedItemId
+            }).done(function () {
+              $("#playersHand").empty();
+              updateHand();
+              updateItems();
+              resetAwayCard();
+            });
+          }
+          else {
+            resetAwayCard();
+          }
+        }
+      });
+
+    }
+    /* Next handle any that effect the player_level. I've removed other effects for monster level as its one player for now */
+    else {
+      var levelsChanged = parseInt(curse.effect);
+      updatePlayerLevel(levelsChanged);
+    }
+
+
+  }
   // handler for when run away button is selected
   function handleRun() {
     var doorCard = $(this).attr("doorCard")
@@ -195,6 +264,13 @@ $(document).ready(function () {
     else {
       handleFight(doorCard);
     }
+  }
+
+  function handleCurse() {
+    var doorCard = $(this).attr("doorCard")
+    $.get("/api/doors/" + doorCard, function (data) {
+      resolveCurse(data[0])
+    });
   }
 
   function handleFight(doorCard) {
@@ -214,17 +290,17 @@ $(document).ready(function () {
         reward = data[0].treasure;
         if (playerLevel > enemyLevel) {
           var rewardText;
-           Materialize.toast('You win!', 4000);
+          Materialize.toast('You defeated the enemy!', 4000);
 
-           if(reward == 1) {
+          if (reward == 1) {
             rewardText = reward + " item!"
-           }
-           else {
-             rewardText = reward +" items!"
-           }
-            Materialize.toast('You get ' + rewardText, 4000);
-             
-        
+          }
+          else {
+            rewardText = reward + " items!"
+          }
+          Materialize.toast('You get ' + rewardText, 4000);
+
+          $("#playersHand").empty();
           drawNCards(reward);
           updatePlayerLevel(1);
           resetAwayCard();
@@ -250,7 +326,7 @@ $(document).ready(function () {
     });
 
     resetPage();
-     Materialize.toast("You're Dead", 4000);
+    Materialize.toast("You're Dead", 4000);
     //display death
 
 
@@ -267,22 +343,28 @@ $(document).ready(function () {
     $("#shipOut").text("You don't have a ship");
 
   }
-  // function when player uses card from hand to play to items
-  // grabs current static player and data stored on the button of the item
-  // then runs api call to create/update that players items
-  // runs either updatePlayerItem() or addPlayerItem
 
+  /* updates the players level for winning a fight or getting it witha curse this will not allow a player to drop below level 1, curses will not 'kill' a player */
   function updatePlayerLevel(levels) {
     $.get("/api/players/" + selectedPlayerID, function (data) {
       console.log("player Data ---", data)
       var playerCurrentLevel = data[0].level;
-      
+
       playerCurrentLevel += levels;
-       Materialize.toast('You leveled to ' + playerCurrentLevel, 4000);
-       
-       if(playerCurrentLevel > 9) {
-         Materialize.toast("You've won!", 4000);
-       }
+      if (playerCurrentLevel < 1) {
+        playerCurrentLevel = 1;
+      }
+      if (levels > 0) {
+        Materialize.toast('You leveled to ' + playerCurrentLevel, 4000);
+      }
+      else {
+        Materialize.toast('Your level has decreased to ' + playerCurrentLevel, 4000);
+      }
+
+      if (playerCurrentLevel > 9) {
+        Materialize.toast("You've won!", 4000);
+      }
+
 
       if (playerCurrentLevel > 0) {
         $.ajax({
@@ -293,16 +375,17 @@ $(document).ready(function () {
             level: playerCurrentLevel
           }
         });
-       
+         $("#playersHand").empty();
         updateHand()
         updateItems();
-        calcEffectiveLevel() 
-      }
-      else {
-        //will be updated with curses
-        // console.log("You ded");
+        calcEffectiveLevel()
       }
 
+    }).done(function () {
+       $("#playersHand").empty();
+      updateHand();
+      updateItems();
+      resetAwayCard();
     });
   }
 
@@ -331,7 +414,7 @@ $(document).ready(function () {
 
     }
     else {
-    
+
       playerCurrentItems[selectedItemSpot] = true;
       addPlayerItem(newItemSpot);
     }
@@ -365,6 +448,7 @@ $(document).ready(function () {
         url: "/api/playerHand/" + cardPlayed + "/" + selectedPlayerID
       })
         .done(function () {
+           $("#playersHand").empty();
           updateHand();
           updateItems();
           cardPlayed = ""
@@ -383,26 +467,23 @@ $(document).ready(function () {
     $.get("/api/players/" + selectedPlayerID, function (playerData) {
       bonus.level = playerData[0].level;
 
-    $.get("/api/playerItems/" + selectedPlayerID, function (data) {
-      if (data) {
-        
-    
-        for (var i in data) {
-          bonus[data[i].Item.spot] = data[i].Item.bonus
+      $.get("/api/playerItems/" + selectedPlayerID, function (data) {
+        if (data) {
+          for (var i in data) {
+            bonus[data[i].Item.spot] = data[i].Item.bonus
+          }
         }
-      }
 
-      var totalBonus = bonus.level + bonus.Armor + bonus.Weapon + bonus.Ship + bonus.Helper;
-      $("#totalBonus").text(totalBonus)
-      updateEffectiveLevel(totalBonus);
+        var totalBonus = bonus.level + bonus.Armor + bonus.Weapon + bonus.Ship + bonus.Helper;
+        $("#totalBonus").text(totalBonus)
+        updateEffectiveLevel(totalBonus);
+      });
     });
-     });
 
 
   }
 
   function updateEffectiveLevel(level) {
-    console.log("updating effective level to ", level)
     var query = {
       id: selectedPlayerID,
       effectiveLevel: level
@@ -424,7 +505,6 @@ $(document).ready(function () {
   // A function to handle what happens when the form is submitted to create a new Player
   function handleNewPlayer(event) {
     event.preventDefault();
-    console.log('Running input', nameInput.val())
     // Don't do anything if the name fields hasn't been filled out
     if (!nameInput.val().trim().trim()) {
       return;
@@ -486,6 +566,7 @@ $(document).ready(function () {
   }
 
   function updateHand() {
+    console.log("Update used");
     $("#playersHand").empty();
     $.get("/api/playerHand/" + selectedPlayerID, function (data) {
       // console.log("handData", data);
@@ -508,16 +589,16 @@ $(document).ready(function () {
 
 
   function resetAwayCard() {
-
+    console.log("reset called")
     $("#awayMissionInner").empty();
 
     var awayImg = $("<img>");
-    awayImg.attr("src", "https://media0.giphy.com/media/QhcPmeqippizS/200.webp#15-grid1")
-    awayImg.attr("height", "250px")
+    awayImg.attr("src", "images/door0.gif")
+    awayImg.attr("id", "door-image")
     $("#awayMissionInner").append(awayImg);
     var awayTitle = $("<span>");
     awayTitle.attr("class", "card-title");
-    awayTitle.attr("id", "awayTitle");
+    awayTitle.attr("id", "away-title");
     awayTitle.text("Away Mission");
     $("#awayMissionInner").append(awayTitle);
 
@@ -530,13 +611,6 @@ $(document).ready(function () {
     awayButton.append(awayButtonIcon);
     $("#awayMissionInner").append(awayButton);
     $("#awayContent").text("Go on an away Mission!");
-
-  }
-  //should probably be a back end call if i can figure that out
-  function handleNewGame() {
-    awayMissionDeck = [];
-    shuffleDeck(28, awayMissionDeck)
-    console.log(awayMissionDeck);
 
   }
 

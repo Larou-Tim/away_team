@@ -1,11 +1,7 @@
 {
   "development": {
     "username": "root",
-<<<<<<< HEAD
     "password": null,
-=======
-    "password": "password",
->>>>>>> ben
     "database": "away_team",
     "host": "127.0.0.1",
     "dialect": "mysql"
