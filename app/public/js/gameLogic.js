@@ -9,6 +9,7 @@
 
 
 $(document).ready(function () {
+
   var nameInput = $("#player-name");
   // var player = new Player("Test");
   var awayMissionDeck = [];
@@ -183,7 +184,7 @@ $(document).ready(function () {
 
   // handler for when run away button is selected
   function handleRun() {
-    var doorCard =  $(this).attr("doorCard")
+    var doorCard = $(this).attr("doorCard")
     var runChance = Math.random()
     if (runChance > .66) {
       //run succeed 
@@ -233,24 +234,24 @@ $(document).ready(function () {
       method: "DELETE",
       url: "/api/players/" + selectedPlayerID
     });
-      
-      resetPage();
+
+    resetPage();
     //display death
 
 
 
   }
 
-function resetPage() {
-  resetAwayCard();
-  $("#playersHand").empty();
-  $("#totalBonus").text("You ded, no bonus for you");
-  $("#weaponOut").text("You don't have any weapons");
-  $("#armorOut").text("You don't have any armor");
-  $("#helperOut").text("You don't have a helper");
-  $("#shipOut").text("You don't have a ship");
+  function resetPage() {
+    resetAwayCard();
+    $("#playersHand").empty();
+    $("#totalBonus").text("You ded, no bonus for you");
+    $("#weaponOut").text("You don't have any weapons");
+    $("#armorOut").text("You don't have any armor");
+    $("#helperOut").text("You don't have a helper");
+    $("#shipOut").text("You don't have a ship");
 
-}
+  }
   // function when player uses card from hand to play to items
   // grabs current static player and data stored on the button of the item
   // then runs api call to create/update that players items

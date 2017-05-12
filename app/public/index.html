@@ -13,18 +13,25 @@
 
 <body>
 
+  <!--<a class="btn-floating btn-large waves-effect waves-light red" onclick=" $('.tap-target').tapTarget('open')"><i class="material-icons">add</i></a>
+     -->
 
-    <div class="fixed-action-btn horizontal click-to-toggle">
-        <a class="btn-floating btn-large red">
-      <i class="material-icons">menu</i>
-    </a>
-        <ul>
-            <li><a class="btn-floating red" id="newGame"><i class="material-icons">insert_chart</i></a></li>
-            <li><a class="btn-floating yellow darken-1" id="drawFive"><i class="material-icons">format_quote</i></a></li>
-            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-            <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-        </ul>
+     <!-- Element Showed -->
+  <a id="menu" class="waves-effect waves-light btn btn-floating cyan" onclick=" $('.tap-target').tapTarget('open')" ><i class="material-icons">info_outline</i></a>
+
+  <!-- Tap Target Structure -->
+  <div class="tap-target cyan" data-activates="menu">
+    <div class="tap-target-content">
+      <h5>Instructions</h5>
+      <p>First Create a name! 
+          Then you will be receive some cards, which you can play.<br>
+          You can have One each of Armor, Weapon, Ship, and Helper. <br>
+          These will all add to your level. Then go on an away mission.
+          If you run into an enemy on your away mission, <br> your level must beat theirs to win!
+          Otherwise you can attempt to run.<br>
+      </p>
     </div>
+  </div>
 
     <div class="row">
         <form class="col s6" id="player-form">
@@ -36,11 +43,7 @@
                 </div>
             </div>
         </form>
-        <div class="col s6"></div>
-        <ul id="playerDropdown" class="dropdown-content">
-        </ul>
-        <a class="btn dropdown-button" href="#!" data-activates="playerDropdown" id="playerSelectDrop">Character Select<i class="mdi-navigation-arrow-drop-down right"></i></a>
-    </div>
+   </div>
 
     <div class="row">
         <div class="col s1"></div>
