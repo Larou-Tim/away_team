@@ -5,9 +5,9 @@ module.exports = function (sequelize, DataTypes) {
   },
   {
   
-      classMethods: {
+      classMethods: { 
         associate: function(models) {
-       
+
           PlayerItem.belongsTo(models.Item, {
             onDelete: "CASCADE",
             foreignKey: {

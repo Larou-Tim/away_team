@@ -1,11 +1,15 @@
 // curses?
 // win logic
-// learn to deploy this 
+// 
 //issue when you win, does not correctly display cards
+//issue on death it doesn't let you keep playing
 
 
+//spit player - api - routes
 
 //hall of heros display all dead people, what they had, and what they died to.
+// will use a modal pop up to display the winners and losers
+// will make tables before the records are destroyed from the player DB
 
 
 $(document).ready(function () {
@@ -32,11 +36,8 @@ $(document).ready(function () {
 
   $(document).on("submit", "#player-form", handleNewPlayer);
   $(document).on("click", "#newGame", handleNewGame);
-  // $(document).on("click", ".playerSelect", selectPlayer);
-  // $(document).on("click", "#drawFive", drawFiveCards);
   $(document).on("click", ".cardPlay", handleItemCard);
   $(document).on("click", "#awayMission", handleAwayMission);
-
   $(document).on("click", "#fight", handleFight);
   $(document).on("click", "#runaway", handleRun);
 
@@ -188,6 +189,7 @@ $(document).ready(function () {
     var runChance = Math.random()
     if (runChance > .66) {
       //run succeed 
+      Materialize.toast('You escaped!', 4000);
       resetAwayCard();
     }
     else {
@@ -211,6 +213,18 @@ $(document).ready(function () {
         enemyLevel = data[0].level;
         reward = data[0].treasure;
         if (playerLevel > enemyLevel) {
+          var rewardText;
+           Materialize.toast('You win!', 4000);
+
+           if(reward == 1) {
+            rewardText = reward + " item!"
+           }
+           else {
+             rewardText = reward +" items!"
+           }
+            Materialize.toast('You get ' + rewardText, 4000);
+             
+        
           drawNCards(reward);
           updatePlayerLevel(1);
           resetAwayCard();
@@ -236,6 +250,7 @@ $(document).ready(function () {
     });
 
     resetPage();
+     Materialize.toast("You're Dead", 4000);
     //display death
 
 
@@ -245,7 +260,7 @@ $(document).ready(function () {
   function resetPage() {
     resetAwayCard();
     $("#playersHand").empty();
-    $("#totalBonus").text("You ded, no bonus for you");
+    $("#totalBonus").text("1");
     $("#weaponOut").text("You don't have any weapons");
     $("#armorOut").text("You don't have any armor");
     $("#helperOut").text("You don't have a helper");
@@ -259,8 +274,15 @@ $(document).ready(function () {
 
   function updatePlayerLevel(levels) {
     $.get("/api/players/" + selectedPlayerID, function (data) {
+      console.log("player Data ---", data)
       var playerCurrentLevel = data[0].level;
+      
       playerCurrentLevel += levels;
+       Materialize.toast('You leveled to ' + playerCurrentLevel, 4000);
+       
+       if(playerCurrentLevel > 9) {
+         Materialize.toast("You've won!", 4000);
+       }
 
       if (playerCurrentLevel > 0) {
         $.ajax({
@@ -271,15 +293,18 @@ $(document).ready(function () {
             level: playerCurrentLevel
           }
         });
+       
         updateHand()
         updateItems();
+        calcEffectiveLevel() 
       }
       else {
-        console.log("You ded");
+        //will be updated with curses
+        // console.log("You ded");
       }
+
     });
   }
-
 
 
   function handleItemCard() {
@@ -306,7 +331,7 @@ $(document).ready(function () {
 
     }
     else {
-      console.log("add it");
+    
       playerCurrentItems[selectedItemSpot] = true;
       addPlayerItem(newItemSpot);
     }
@@ -355,10 +380,13 @@ $(document).ready(function () {
       Ship: 0,
       Helper: 0
     }
+    $.get("/api/players/" + selectedPlayerID, function (playerData) {
+      bonus.level = playerData[0].level;
 
     $.get("/api/playerItems/" + selectedPlayerID, function (data) {
       if (data) {
-
+        
+    
         for (var i in data) {
           bonus[data[i].Item.spot] = data[i].Item.bonus
         }
@@ -368,12 +396,13 @@ $(document).ready(function () {
       $("#totalBonus").text(totalBonus)
       updateEffectiveLevel(totalBonus);
     });
+     });
 
 
   }
 
   function updateEffectiveLevel(level) {
-    console.log("updating level to ", level)
+    console.log("updating effective level to ", level)
     var query = {
       id: selectedPlayerID,
       effectiveLevel: level

@@ -26,6 +26,19 @@ module.exports = function (app) {
     });
   });
 
+ app.put("/api/playerLevelUp/", function (req, res) {
+
+    db.Player.update(
+      req.body,
+      {
+        where: {
+          id: req.body.id,
+        }
+      }).then(function (dbPlayerItem) {
+        res.json(dbPlayerItem);
+      });
+  });
+
 
   //need to add pull for single player id
 
@@ -47,10 +60,7 @@ module.exports = function (app) {
   });
 
 
-
   // ------------------- PLAYER ITEMS
-
-
 
   app.get("/api/playerItems/:playerid", function (req, res) {
 
@@ -67,19 +77,6 @@ module.exports = function (app) {
   });
 
 
-
-  // app.get("/api/playerItems/:id", function (req, res) {
-
-  //   db.Player.findOne({
-  //     include: [db.PlayerHand],
-  //     where: {
-  //       id: req.params.id
-  //     }
-  //   }).then(function (dbPlayerHand) {
-  //     // console.log(dbPlayerItem);
-  //     res.json(dbPlayerHand); 
-  //   });
-  // });
 
   // updating the effective level after playing items
 
@@ -118,15 +115,12 @@ module.exports = function (app) {
       });
   });
 
-
   app.post("/api/playerHand", function (req, res) {
     // console.log("ReqBody", req.body)
     db.PlayerHand.create(req.body).then(function (dbHand) {
       res.json(dbHand);
     });
   });
-
-
 
   app.get("/api/playerHand/:id", function (req, res) {
 
