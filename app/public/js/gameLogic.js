@@ -1,7 +1,12 @@
-// need to bring in the other DBs
+// curses?
+// win logic
+// learn to deploy this 
+//issue when you win, does not correctly display cards
 
-// need to finish hand/cards/items -- done i think, need to rewire
-// Start on the door deck for the actual game
+
+
+//hall of heros display all dead people, what they had, and what they died to.
+
 
 $(document).ready(function () {
   var nameInput = $("#player-name");
@@ -9,6 +14,7 @@ $(document).ready(function () {
   var awayMissionDeck = [];
   var selectedPlayerID;
   var selectedPlayerEffectiveLevel;
+
 
   //used to determine if item should be a post/put
   var playerCurrentItems = {
@@ -36,18 +42,166 @@ $(document).ready(function () {
   //pulls in all players in the DB for selection (this should be log in or something, but testing this will work)
   getPlayers();
 
-  function handleRun() {
+
+  // Cards in hand constructor
+  function getItemCard(cards) {
+    $("#playersHand").empty()
+    // console.log(cards);
+
+    if (cards.length) {
+      for (var i in cards) {
+        // console.log("card search", cards[i].ItemId)
+        $.get("/api/items/" + cards[i].ItemId, function (data) {
+          // console.log("card data ------- ", data);
+          var cardCol = $("<div>");
+          cardCol.attr("class", "col s12 m3");
+
+          var cardDiv = $("<div>");
+          cardDiv.attr("class", "card");
+
+          var cardImageDiv = $("<div>");
+          cardImageDiv.attr("class", "card-image");
+          var cardImage = $("<img>");
+          cardImage.attr("src", "https://getmdl.io/assets/demos/welcome_card.jpg");
+          cardImageDiv.append(cardImage);
+
+          var cardTitle = $("<span>");
+          cardTitle.text(data.name);
+          cardImageDiv.append(cardTitle);
+
+
+
+          // ------ card fab instead of button
+
+          var cardActionButton = $("<a>");
+          cardActionButton.attr("class", "btn-floating halfway-fab waves-effect waves-light teal cardPlay");
+          cardActionButton.attr("id", "card" + data.id);
+          cardActionButton.attr("itemSpot", data.spot)
+
+          var fabIcon = $("<i>");
+          fabIcon.attr("class", "material-icons")
+          fabIcon.text("add");
+
+          cardActionButton.append(fabIcon);
+          cardImageDiv.append(cardActionButton);
+
+          cardDiv.append(cardImageDiv);
+
+          var cardContentDiv = $("<div>");
+          cardContentDiv.attr("class", "card-content");
+
+          var cardBonus = $("<h5>");
+          cardBonus.text("+" + data.bonus + " " + data.spot);
+          cardContentDiv.append(cardBonus);
+
+          var cardContentText = $("<p>");
+          //need item spot
+          cardContentText.text(data.description);
+          cardContentDiv.append(cardContentText);
+
+          cardDiv.append(cardContentDiv);
+
+          cardCol.append(cardDiv)
+          $("#playersHand").append(cardCol);
+
+
+        });
+      }
+    }
 
   }
 
-  function handleFight() {
+  // constructor to make updates on what item a player has played
+  function updateItems() {
+    console.log('updating Items for playerID', selectedPlayerID);
+    $.get("/api/playerItems/" + selectedPlayerID, function (data) {
+
+
+      console.log("item update data", data);
+
+      if (data) {
+        for (var i in data) {
+          var selectedItemSpot;
+          // console.log(data.PlayerItems[i])
+          switch (data[i].Item.spot) {
+            case "Weapon":
+              selectedItemSpot = "weapon";
+              break;
+            case "Armor":
+              selectedItemSpot = "armor";
+              break;
+            case "Helper":
+              selectedItemSpot = "helper";
+              break;
+            case "Ship":
+              selectedItemSpot = "ship";
+              break;
+          }
+          $("#" + selectedItemSpot + "Out").text("You have a " + data[i].Item.name + ". This gives you +" + data[i].Item.bonus);
+
+        }
+      }
+      calcEffectiveLevel()
+    });
+
+  }
+
+  //constructor to update the away mission
+  function handleAwayMission() {
+    console.log('handling mission')
+
+    $.get("/api/door/", function (data) {
+      $("#awayTitle").text(data[0].name + " Level " + data[0].level)
+      $("#awayContent").text(data[0].description);
+      $("#awayMission").remove();
+
+      var newFabFight = $("<a>");
+      newFabFight.attr("class", "btn-floating halfway-fab waves-effect waves-light green");
+      newFabFight.attr("id", "fight");
+      var newFabFightIcon = $("<i>");
+      newFabFightIcon.attr("class", "material-icons");
+      newFabFightIcon.text("play_arrow");
+      newFabFight.attr("doorCard", data[0].id);
+
+      newFabFight.append(newFabFightIcon);
+      $("#awayMissionInner").append(newFabFight);
+
+      var newFabRun = $("<a>");
+      newFabRun.attr("class", "btn-floating halfway-fab waves-effect waves-light orange");
+      newFabRun.attr("id", "runaway");
+      var newFabRunIcon = $("<i>");
+      newFabRunIcon.attr("class", "material-icons");
+      newFabRunIcon.text("call_missed");
+      newFabRun.attr("doorCard", data[0].id);
+
+      newFabRun.append(newFabRunIcon);
+      $("#awayMissionInner").append(newFabRun);
+
+    });
+  }
+
+
+  // handler for when run away button is selected
+  function handleRun() {
+    var doorCard =  $(this).attr("doorCard")
+    var runChance = Math.random()
+    if (runChance > .66) {
+      //run succeed 
+      resetAwayCard();
+    }
+    else {
+      handleFight(doorCard);
+    }
+  }
+
+  function handleFight(doorCard) {
     //first get player's effective level
     // then compare 
     // then we decide what happens
     var playerLevel;
     var enemyLevel;
     var reward;
-    var doorCard = $(this).attr("doorCard")
+    var doorCard = $(this).attr("doorCard") || doorCard;
 
     $.get("/api/players/" + selectedPlayerID, function (data) {
       playerLevel = data[0].effectiveLevel;
@@ -72,6 +226,31 @@ $(document).ready(function () {
 
 
   }
+
+  function handleLoss() {
+
+    $.ajax({
+      method: "DELETE",
+      url: "/api/players/" + selectedPlayerID
+    });
+      
+      resetPage();
+    //display death
+
+
+
+  }
+
+function resetPage() {
+  resetAwayCard();
+  $("#playersHand").empty();
+  $("#totalBonus").text("You ded, no bonus for you");
+  $("#weaponOut").text("You don't have any weapons");
+  $("#armorOut").text("You don't have any armor");
+  $("#helperOut").text("You don't have a helper");
+  $("#shipOut").text("You don't have a ship");
+
+}
   // function when player uses card from hand to play to items
   // grabs current static player and data stored on the button of the item
   // then runs api call to create/update that players items
@@ -100,36 +279,7 @@ $(document).ready(function () {
     });
   }
 
-  function handleAwayMission() {
-    console.log('handling mission')
 
-    $.get("/api/door/", function (data) {
-      $("#awayTitle").text(data[0].name + " Level " + data[0].level)
-      $("#awayContent").text(data[0].description);
-
-      var newFabFight = $("<a>");
-      newFabFight.attr("class", "btn-floating halfway-fab waves-effect waves-light green");
-      newFabFight.attr("id", "fight");
-      var newFabFightIcon = $("<i>");
-      newFabFightIcon.attr("class", "material-icons");
-      newFabFightIcon.text("play_arrow");
-      newFabFight.attr("doorCard", data[0].id);
-
-      newFabFight.append(newFabFightIcon);
-      $("#awayMissionInner").append(newFabFight);
-
-      var newFabRun = $("<a>");
-      newFabRun.attr("class", "btn-floating halfway-fab waves-effect waves-light orange");
-      newFabRun.attr("id", "runaway");
-      var newFabRunIcon = $("<i>");
-      newFabRunIcon.attr("class", "material-icons");
-      newFabRunIcon.text("call_missed");
-
-      newFabRun.append(newFabRunIcon);
-      $("#awayMissionInner").append(newFabRun);
-
-    });
-  }
 
   function handleItemCard() {
 
@@ -239,39 +389,7 @@ $(document).ready(function () {
   //---------- needs update call if no item in slot
   //handle to display the items a player has out
   //calls api to get items associated with that player
-  function updateItems() {
-    console.log('updating Items for playerID', selectedPlayerID);
-    $.get("/api/playerItems/" + selectedPlayerID, function (data) {
 
-
-      console.log("item update data", data);
-
-      if (data) {
-        for (var i in data) {
-          var selectedItemSpot;
-          // console.log(data.PlayerItems[i])
-          switch (data[i].Item.spot) {
-            case "Weapon":
-              selectedItemSpot = "weapon";
-              break;
-            case "Armor":
-              selectedItemSpot = "armor";
-              break;
-            case "Helper":
-              selectedItemSpot = "helper";
-              break;
-            case "Ship":
-              selectedItemSpot = "ship";
-              break;
-          }
-          $("#" + selectedItemSpot + "Out").text("You have a " + data[i].Item.name + ". This gives you +" + data[i].Item.bonus);
-
-        }
-      }
-      calcEffectiveLevel()
-    });
-
-  }
 
   // A function to handle what happens when the form is submitted to create a new Player
   function handleNewPlayer(event) {
@@ -324,91 +442,6 @@ $(document).ready(function () {
     });
   }
 
-  //i want this shifted to a db pull to pull from table player hand
-  function getItemCard(cards) {
-    $("#playersHand").empty()
-    // console.log(cards);
-
-    if (cards.length) {
-      for (var i in cards) {
-        // console.log("card search", cards[i].ItemId)
-        $.get("/api/items/" + cards[i].ItemId, function (data) {
-          // console.log("card data ------- ", data);
-          var cardCol = $("<div>");
-          cardCol.attr("class", "col s12 m3");
-
-          var cardDiv = $("<div>");
-          cardDiv.attr("class", "card");
-
-          var cardImageDiv = $("<div>");
-          cardImageDiv.attr("class", "card-image");
-          var cardImage = $("<img>");
-          cardImage.attr("src", "https://getmdl.io/assets/demos/welcome_card.jpg");
-          cardImageDiv.append(cardImage);
-
-          var cardTitle = $("<span>");
-          cardTitle.text(data.name);
-          cardImageDiv.append(cardTitle);
-
-
-
-          // ------ card fab instead of button
-
-          var cardActionButton = $("<a>");
-          cardActionButton.attr("class", "btn-floating halfway-fab waves-effect waves-light teal cardPlay");
-          cardActionButton.attr("id", "card" + data.id);
-          cardActionButton.attr("itemSpot", data.spot)
-
-          var fabIcon = $("<i>");
-          fabIcon.attr("class", "material-icons")
-          fabIcon.text("add");
-
-          cardActionButton.append(fabIcon);
-          cardImageDiv.append(cardActionButton);
-
-          cardDiv.append(cardImageDiv);
-
-          var cardContentDiv = $("<div>");
-          cardContentDiv.attr("class", "card-content");
-
-          var cardBonus = $("<h5>");
-          cardBonus.text("+" + data.bonus + " " + data.spot);
-          cardContentDiv.append(cardBonus);
-
-          var cardContentText = $("<p>");
-          //need item spot
-          cardContentText.text(data.description);
-          cardContentDiv.append(cardContentText);
-
-          cardDiv.append(cardContentDiv);
-
-          // var cardActionDiv = $("<div>");
-          // cardActionDiv.attr("class", "card-action");
-
-          // var cardActionButton = $("<a>");
-          //button
-
-          // cardActionButton.attr("href", "#!");
-          // cardActionButton.attr("class", "btn waves-effect waves-teal cardPlay");
-          // cardActionButton.text("Play Card");
-
-
-
-          // cardActionButton.attr("id", "card" + data.id);
-          // cardActionButton.attr("itemSpot", data.spot)
-
-          // cardActionDiv.append(cardActionButton);
-          // cardDiv.append(cardActionDiv);
-
-          cardCol.append(cardDiv)
-          $("#playersHand").append(cardCol);
-
-
-        });
-      }
-    }
-
-  }
 
   function addToPlayerHand(cardID) {
     console.log("card to add to hand", cardID)
@@ -488,67 +521,6 @@ $(document).ready(function () {
       updateHand();
     });
   }
-
-  // function drawFiveCards() {
-  //   for (var i = 0; i < 5; i++) {
-  //     var cardNumber = awayMissionDeck.shift();
-  //     // getItemCard(cardNumber);
-  //     addToPlayerHand(cardNumber);
-  //   }
-  //   updateHand();
-  // }
-
-  //pulls cards from item DB
-  //----------------------------------------
-  // function shuffleDeck(cards, deck) {
-  //   //want to look into peoples hands and remove those numbers
-  //   // deck.empty();
-  //   // var cardsOut = [];
-  //   // if (players) {
-  //   //     for (var i = 0; i < players.length; i++) {
-  //   //         for (var j = 0; j < players[i].hand.length; j++) {
-  //   //             cardsOut.push(players[i].hand[j]);
-  //   //         }
-  //   //     }
-  //   // }
-  //   // console.log(cardsOut);
-
-  //   for (var i = 1; i <= cards; i++) {
-  //     // var index = cardsOut.indexOf(i);
-  //     // if (index == -1) {
-  //     deck.push(i);
-  //     // }
-  //   }
-  //   // console.log(deck, "before random");
-  //   shuffle(deck);
-  //   // console.log(deck);
-  // }
-
-  // //randomize the order of the 'cards' in the deck
-  // function shuffle(array) {
-  //   var i = 0
-  //     , j = 0
-  //     , temp = null;
-
-  //   for (i = array.length - 1; i > 0; i--) {
-  //     j = Math.floor(Math.random() * (i + 1));
-  //     temp = array[i];
-  //     array[i] = array[j];
-  //     array[j] = temp;
-  //   }
-  // }
-
-  // //*********** not used */
-
-  // function findWithAttr(array, attr, value) {
-  //   for (var i = 0; i < array.length; i += 1) {
-  //     if (array[i][attr] === value) {
-  //       return i;
-  //     }
-  //   }
-  //   return -1;
-  // }
-  // //----------------------------------------
 
 });
 
