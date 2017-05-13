@@ -62,7 +62,7 @@ $(document).ready(function () {
           cardImageDiv.append(cardTitle);
 
           var cardActionButton = $("<a>");
-          cardActionButton.attr("class", "btn-floating halfway-fab waves-effect waves-light teal cardPlay");
+          cardActionButton.attr("class", "btn-floating halfway-fab waves-effect waves-light red accent-4 cardPlay");
           cardActionButton.attr("id", "card" + data.id);
           cardActionButton.attr("itemSpot", data.spot)
 
@@ -166,11 +166,11 @@ $(document).ready(function () {
 
         if (data[0].type == 'curse') {
           var newFabResolve = $("<a>");
-          newFabResolve.attr("class", "btn-floating halfway-fab waves-effect waves-light pink");
+          newFabResolve.attr("class", "btn-floating btn-large halfway-fab waves-effect waves purple accent-4 right");
           newFabResolve.attr("id", "resolve");
           var newFabResolveIcon = $("<i>");
           newFabResolveIcon.attr("class", "material-icons");
-          newFabResolveIcon.text("visibility");
+          newFabResolveIcon.text("flash_on");
           newFabResolve.append(newFabResolveIcon);
           newFabResolve.attr("doorCard", data[0].id);
           $("#awayMissionInner").append(newFabResolve);
@@ -179,21 +179,21 @@ $(document).ready(function () {
         }
         else {
           var newFabFight = $("<a>");
-          newFabFight.attr("class", "btn-floating halfway-fab waves-effect waves-light green");
+          newFabFight.attr("class", "btn-floating btn-large halfway-fab waves-effect waves orange accent-4 right");
           newFabFight.attr("id", "fight");
           var newFabFightIcon = $("<i>");
           newFabFightIcon.attr("class", "material-icons");
-          newFabFightIcon.text("my_location");
+          newFabFightIcon.text("whatshot");
           newFabFight.attr("doorCard", data[0].id);
           newFabFight.append(newFabFightIcon);
           $("#awayMissionInner").append(newFabFight);
 
           var newFabRun = $("<a>");
-          newFabRun.attr("class", "btn-floating halfway-fab waves-effect waves-light orange");
+          newFabRun.attr("class", "btn-floating btn-large halfway-fab waves-effect waves pink lighten-1 right");
           newFabRun.attr("id", "runaway");
           var newFabRunIcon = $("<i>");
           newFabRunIcon.attr("class", "material-icons");
-          newFabRunIcon.text("call_missed");
+          newFabRunIcon.text("directions_run");
           newFabRun.attr("doorCard", data[0].id);
           $("#away-title").text(data[0].name + " Level " + data[0].level)
 
@@ -368,7 +368,9 @@ $(document).ready(function () {
     $("#player-name").text("");
     selectedPlayerID = "";
     $("#playersHand").empty();
+    $("#currentLevel").text("1");
     $("#totalBonus").text("1");
+    $("#playerCurrentLevel").text("1");
     $("#weaponOut").text("You don't have any weapons");
     $("#armorOut").text("You don't have any armor");
     $("#helperOut").text("You don't have a helper");
@@ -387,9 +389,12 @@ $(document).ready(function () {
       }
       if (levels > 0) {
         Materialize.toast('You leveled to ' + playerCurrentLevel, 4000);
+      $('#currentLevel').text(playerCurrentLevel);
       }
       else {
         Materialize.toast('Your level has decreased to ' + playerCurrentLevel, 4000);
+        $('#currentLevel').text(playerCurrentLevel);
+
       }
 
       if (playerCurrentLevel > 9) {
@@ -511,7 +516,8 @@ $(document).ready(function () {
         var totalBonus = bonus.level + bonus.Armor + bonus.Weapon + bonus.Ship + bonus.Helper;
         playerTrack.level = bonus.level;
         playerTrack.effectiveLevel = totalBonus;
-        $("#totalBonus").text(totalBonus)
+        $("#totalBonus").text(totalBonus);
+        $("#currentLevel").text(bonus.level);
         updateEffectiveLevel(totalBonus);
       });
     });
@@ -595,7 +601,7 @@ $(document).ready(function () {
     $("#awayMissionInner").empty();
 
     var awayImg = $("<img>");
-    awayImg.attr("src", "images/door0.gif")
+    awayImg.attr("src", "./images/stos.jpg")
     awayImg.attr("id", "door-image")
     $("#awayMissionInner").append(awayImg);
     var awayTitle = $("<span>");
@@ -605,11 +611,11 @@ $(document).ready(function () {
     $("#awayMissionInner").append(awayTitle);
 
     var awayButton = $("<a>");
-    awayButton.attr("class", "btn-floating halfway-fab waves-effect waves-light red");
+    awayButton.attr("class", "btn-floating btn-large halfway-fab waves-effect waves-light red accent-4");
     awayButton.attr("id", "awayMission");
     var awayButtonIcon = $("<i>");
     awayButtonIcon.attr("class", "material-icons")
-    awayButtonIcon.text("add");
+    awayButtonIcon.text("flight");
     awayButton.append(awayButtonIcon);
     $("#awayMissionInner").append(awayButton);
     $("#awayContent").text("Go on an away Mission!");

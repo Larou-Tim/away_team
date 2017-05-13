@@ -1,50 +1,109 @@
+
+*{
+  font-family: 'Orbitron', sans-serif;
+}
+
+video#bgvid {
+  margin: 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1000;
+  -ms-o-transform: translateX(-50%) translateY(-50%);
+  -moz-o-transform: translateX(-50%) translateY(-50%);
+  -webkit-o-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  background: url(./app/public/images/space.png) no-repeat;
+  background-size: cover;
+  display: initial;
+}
+#instructions{
+  color: white;
+}
+#menu{
+  margin: 15px 25px 15px 25px;
+}
+{
+  margin:15px;
+}
+#battleStation #hand{
+  margin: 15px;
+  padding:0;
+  margin-left:200px;
+}
+.tap-target-content{
+  line-height: 30px;
+}
 .icon-block {
   padding: 0 15px;
 }
 .icon-block .material-icons {
 	font-size: inherit;
+
 }
 #player-form{
-  margin-left: 15px;
-}
-
-body{
-  background: url(http://wallpapercave.com/wp/4swVVL8.jpg) 0 / cover fixed;
-  
+  margin-left: 25px;
 }
 
 #fight, #resolve {
-  left: 10px
+  right: 70px;
+  margin: 0 5px 0 5px;
+  z-index: 50;
 }
-
 #runaway {
-  left: 60px
+  right: 10px;
+  margin: 0 5px 0 5px;
+  z-index:50;
 }
 
 #item-card {
-  height: 400px;
+  height: 500px;
 }
-#hall-button, #instructions {
+#hall-button {
   margin-top: 10px;
   margin-right: 15px;
 }
 #item-image {
-  height: 250px;
+  height: 280px;
+  width:100%;
 }
 
 #item-title{
-  color: cyan;
+  color: #d50000;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-#away-title {
+#away-title .card-title{
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  text-align: right;
 }
 
 #door-image {
-  height:250px;
+  height:300px;
 }
 /*items description was too low*/
 #item-content{
-      padding: 5px 24px 24px 24px;
+      padding: 5px 24px 10px 24px;
+      overflow:none;
+}
+.tabs .tab a{
+  font-weight: bolder;
+  color: #d50000;
+}
+ .tabs .tab a.active{
+  color: #000051;
+  font-weight: bolder;
+}
+.tabs .tab a:hover{
+color: #c5cae9;
+}
+.tabs .indicator{
+  background-color: #000051;
+}
+#awayMission{
+ margin-bottom: 40px;
 }
