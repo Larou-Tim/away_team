@@ -642,6 +642,10 @@ $(document).ready(function () {
   }
 
   function updateModal() {
+    //force an update somewhere
+    updateHand();
+    updateItems();
+
     $.get("/api/hallwin/", function (winData) {
       $.get("/api/halldeath/", function (deathData) {
         $("#winList").empty()
@@ -652,8 +656,8 @@ $(document).ready(function () {
           listTitle.attr("class", "title");
           listTitle.text(winData[i].name);
           var listContent = $("<p>");
-          listContent.html("Won in " + winData[i].turn + " turns! By defeating " + winData[i].lastEnemy + "." +
-            " <br/> " + winData[i].name + " had a total level of " + winData[i].effectiveLevel + ". Congrats!")
+          listContent.html("Won in " + winData[i].turn + " turns by defeating " + winData[i].lastEnemy + "!" +
+            " <br/> " + winData[i].name + " had a total bonus of " + winData[i].effectiveLevel + ". Congrats!")
           newList.append(listTitle);
           newList.append(listContent);
           $("#winList").append(newList);
