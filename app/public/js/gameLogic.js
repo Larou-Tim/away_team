@@ -160,7 +160,7 @@ $(document).ready(function () {
 
     if (selectedPlayerID > 1) {
       playerTrack.turn++
-
+      updateHand();
 
       $.get("/api/door/", function (data) {
 
@@ -365,6 +365,13 @@ $(document).ready(function () {
 
   function resetPage() {
     resetAwayCard();
+    playerTrack = {
+      name: "",
+      level: 1,
+      effectiveLevel: 1,
+      turn: 0,
+      lastEnemy: ""
+    }
     $("#player-name").text("");
     selectedPlayerID = "";
     $("#playersHand").empty();
