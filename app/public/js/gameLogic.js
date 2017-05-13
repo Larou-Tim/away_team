@@ -515,7 +515,7 @@ $(document).ready(function () {
 
         var totalBonus = bonus.level + bonus.Armor + bonus.Weapon + bonus.Ship + bonus.Helper;
         playerTrack.level = bonus.level;
-        playerTrack.effectiveLevel = bonus.Armor + bonus.Weapon + bonus.Ship + bonus.Helper;
+        playerTrack.effectiveLevel = totalBonus;
         $("#totalBonus").text(totalBonus)
         updateEffectiveLevel(totalBonus);
       });
