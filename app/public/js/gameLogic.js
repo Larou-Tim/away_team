@@ -83,7 +83,7 @@ $(document).ready(function () {
           cardContentDiv.append(cardBonus);
 
           var cardContentText = $("<p>");
-          cardContentText.attr("id","card-content-text");
+          cardContentText.attr("id", "card-content-text");
           cardContentText.text(data.description);
           cardContentDiv.append(cardContentText);
 
@@ -372,6 +372,13 @@ $(document).ready(function () {
   }
 
   function resetPage() {
+    playerTrack = {
+      name: "",
+      level: 1,
+      effectiveLevel: 1,
+      turn: 0,
+      lastEnemy: ""
+    }
     resetAwayCard();
     playerTrack = {
       name: "",
@@ -390,7 +397,11 @@ $(document).ready(function () {
     $("#armorOut").text("You don't have any armor");
     $("#helperOut").text("You don't have a helper");
     $("#shipOut").text("You don't have a ship");
-    $("#playersHand").empty();
+    setTimeout(function () {
+
+      $("#playersHand").empty();
+    }, 50);
+
   }
 
   /* updates the players level for winning a fight or getting it witha curse this will not allow a player to drop below level 1, curses will not 'kill' a player */
@@ -404,7 +415,7 @@ $(document).ready(function () {
       }
       if (levels > 0) {
         Materialize.toast('You leveled to ' + playerCurrentLevel, 4000);
-      $('#currentLevel').text(playerCurrentLevel);
+        $('#currentLevel').text(playerCurrentLevel);
       }
       else {
         Materialize.toast('Your level has decreased to ' + playerCurrentLevel, 4000);
