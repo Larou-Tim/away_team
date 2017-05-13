@@ -44,7 +44,7 @@ function createData() {
     { name: 'Ronan\'s Universal Weapon', spot: 'Weapon', bonus: 4, description: 'Ronan\'s totally-not-overpowered hammer. It can only manipulate matter, generate force fields, grant interstellar teleportation....',  image: 'item4.png' },
     { name: 'Zorg\'s ZF-1', spot: 'Weapon', bonus: 3, description: 'Contains rocket launcher, arrow launcher, net launcher, flamethrower (my favorite), replay system, and Zorg\'s patented "Replay" system.',  image: 'item5.jpg' },
     { name: 'Obi Wan\'s Jedi Cloak', spot: 'Armor', bonus: 1, description: 'An old man\'s cloak. There\'s hard candies in the pockets.',  image: 'item6.jpg' },
-    { name: 'Commander Riker\'s Beard', spot: 'Armor', bonus: 1, description: 'You don Riker\'s beard. You are immediately stronger and more confident...and a lil\'s dashing',  image: 'item7.jpg' },
+    { name: 'Commander Riker\'s Beard', spot: 'Armor', bonus: 1, description: 'You don Riker\'s beard. You are immediately stronger and more confident...and a lil\'s dashing',  image: 'item7.gif' },
     { name: 'Boba Fett\'s Suit', spot: 'Armor', bonus: 2, description: 'Complete with helmet, jet pack, and bits of Boba still in the suit!',  image: 'item8.jpg' },
     { name: 'Starlord\'s Helmet', spot: 'Armor', bonus: 2, description: 'Allows for combat in unpressurized environments and comes with the only the best tracks from Starlord\'s Awesome Mix',  image: 'item9.jpg' },
     { name: 'Dark Helmet\'s Helmet', spot: 'Armor', bonus: 3, description: 'When you put it on, people assume you give great helmet',  image: 'item10.png' },
