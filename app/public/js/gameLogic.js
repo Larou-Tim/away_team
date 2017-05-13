@@ -83,6 +83,7 @@ $(document).ready(function () {
           cardContentDiv.append(cardBonus);
 
           var cardContentText = $("<p>");
+          cardContentText.attr("id","card-content-text");
           cardContentText.text(data.description);
           cardContentDiv.append(cardContentText);
 
@@ -194,7 +195,7 @@ $(document).ready(function () {
           newFabRunIcon.attr("class", "material-icons");
           newFabRunIcon.text("directions_run");
           newFabRun.attr("doorCard", data[0].id);
-          $("#away-title").text(data[0].name + " Level " + data[0].level)
+          $("#away-title").html(data[0].name + " <br/> Level " + data[0].level)
 
           newFabRun.append(newFabRunIcon);
           $("#awayMissionInner").append(newFabRun);

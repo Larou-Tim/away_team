@@ -50,22 +50,26 @@ video#bgvid {
   margin-left: 15px;
 }*/
 
-body{
-  background: url(/images/background.jpg) 0 / cover fixed;
-  
 
+body{
+  /*background: url(/images/background.jpg) 0 / cover fixed;*/
   margin-left: 25px;
 
 }
 
+#card-content-text{
+  font-size:12px;
+}
+
 #fight, #resolve {
   right: 70px;
-  margin: 0 5px 0 5px;
+  margin: 0 5px 40px 5px;
   z-index: 50;
+  
 }
 #runaway {
   right: 10px;
-  margin: 0 5px 0 5px;
+  margin: 0 5px 40px 5px;
   z-index:50;
 }
 
@@ -116,3 +120,4 @@ color: #c5cae9;
 #awayMission{
  margin-bottom: 40px;
 }
+
