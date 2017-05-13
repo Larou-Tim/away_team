@@ -116,7 +116,7 @@ $(document).ready(function () {
         Ship: false,
         Aide: false
       }
-    
+
 
       if (data) {
         for (var i in data) {
@@ -171,7 +171,7 @@ $(document).ready(function () {
       // test fields seem to change slighting on curses, so look into that
       // resulve card will call function resolveCurse and then reset the the away card 
       playerTrack.turn++
-      console.log(playerTrack);
+
 
       $.get("/api/door/", function (data) {
 
@@ -218,7 +218,7 @@ $(document).ready(function () {
 
       });
     }
-    else{
+    else {
       Materialize.toast('You need to make a character!', 4000);
     }
   }
@@ -233,7 +233,7 @@ $(document).ready(function () {
       $.get("/api/playerItems/" + selectedPlayerID, function (data) {
         //reset var for use
         playerCurrentItemsId = {
-     
+
         }
 
 
@@ -257,16 +257,15 @@ $(document).ready(function () {
           }
           var curseItemSpot = curse.category;
           //if the player has that item then delete it
-         
+
           if (playerCurrentItemsId[curseItemSpot]) {
             Materialize.toast('You lost your ' + curseItemSpot + '!', 4000);
             var deletedItemId = playerCurrentItemsId[curseItemSpot]
-             console.log("Curse info",playerCurrentItemsId, curseItemSpot, deletedItemId,selectedPlayerID)
+
             $.ajax({
               method: "DELETE",
               url: "/api/playerItems/" + deletedItemId + "/" + selectedPlayerID
             }).done(function (x) {
-              console.log(x)
 
               updateHand();
               updateItems();
@@ -650,7 +649,7 @@ $(document).ready(function () {
 
 
     $.post("/api/hallwin", playerTrack, function (data) {
-      console.log(data)
+
 
 
     })
@@ -658,7 +657,7 @@ $(document).ready(function () {
 
   function handleHallLoss() {
     $.post("/api/halldeath", playerTrack, function (data) {
-      console.log(data)
+
 
 
     })
