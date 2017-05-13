@@ -116,6 +116,7 @@ $(document).ready(function () {
         Ship: false,
         Aide: false
       }
+    
 
       if (data) {
         for (var i in data) {
@@ -231,40 +232,41 @@ $(document).ready(function () {
       //if its remove, check the player's items to see if they have one
       $.get("/api/playerItems/" + selectedPlayerID, function (data) {
         //reset var for use
-        playerCurrentItems = {
-          Weapon: false,
-          Armor: false,
-          Ship: false,
-          Aide: false
+        playerCurrentItemsId = {
+     
         }
+
 
         if (data) {
           for (var i in data) {
 
             switch (data[i].Item.spot) {
               case "Weapon":
-                playerCurrentItems.Weapon = true;
+                playerCurrentItemsId.Weapon = data[i].Item.id;
                 break;
               case "Armor":
-                playerCurrentItems.Armor = true;
+                playerCurrentItemsId.Armor = data[i].Item.id;
                 break;
               case "Helper":
-                playerCurrentItems.Helper = true;
+                playerCurrentItemsId.Helper = data[i].Item.id;
                 break;
               case "Ship":
-                playerCurrentItems.Ship = true;
+                playerCurrentItemsId.Ship = data[i].Item.id;
                 break;
             }
           }
           var curseItemSpot = curse.category;
           //if the player has that item then delete it
-          if (playerCurrentItems[curseItemSpot]) {
+         
+          if (playerCurrentItemsId[curseItemSpot]) {
             Materialize.toast('You lost your ' + curseItemSpot + '!', 4000);
-            var deletedItemId = data[i].Item.id;
+            var deletedItemId = playerCurrentItemsId[curseItemSpot]
+             console.log("Curse info",playerCurrentItemsId, curseItemSpot, deletedItemId,selectedPlayerID)
             $.ajax({
               method: "DELETE",
               url: "/api/playerItems/" + deletedItemId + "/" + selectedPlayerID
-            }).done(function () {
+            }).done(function (x) {
+              console.log(x)
 
               updateHand();
               updateItems();
