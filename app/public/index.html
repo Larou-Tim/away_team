@@ -23,13 +23,8 @@
                 </div>
             </form>
             <a href="#" class="brand-logo center">Away Team</a>
-
-            <!--<a href="#" class="brand-logo">Logo</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="sass.html">Sass</a></li>
-        <li><a href="badges.html">Components</a></li>
-        <li><a href="collapsible.html">JavaScript</a></li>
-      </ul>-->
+            <!-- Modal Trigger -->
+            <a class="waves-effect waves-light btn pink right" href="#hall" id="hall-button">Hall Of Heros</a> 
         </div>
     </nav>
     <!--<a class="btn-floating btn-large waves-effect waves-light red" onclick=" $('.tap-target').tapTarget('open')"><i class="material-icons">add</i></a>
@@ -96,89 +91,29 @@
         </div>
     </div>
 
-    <!-- Modal Trigger -->
-    <!--<a class="waves-effect waves-light btn" href="#modal1">Modal</a>-->
+
 
     <!-- Modal Structure -->
-    <div id="modal1" class="modal bottom-sheet">
+    <div id="hall" class="modal bottom-sheet">
         <div class="modal-content">
             <div class="row">
                 <div class="col s12">
                     <ul class="tabs">
-                        <li class="tab col s3"><a href="#test1">Winners</a></li>
-                        <li class="tab col s3"><a class="active" href="#test2">Losers</a></li>
+                        <li class="tab col s3"><a href="#wins">Winners</a></li>
+                        <li class="tab col s3"><a class="active" href="#deaths">Losers</a></li>
 
                     </ul>
                 </div>
-                <div id="test1" class="col s12">
-                    <ul class="collection">
-                        <li class="collection-item avatar">
-                            <img src="" alt="" class="circle">
-                            <span class="title">Title</span>
-                            <p>First Line <br> Second Line
-                            </p>
-                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                        </li>
-                        <li class="collection-item avatar">
-                            <i class="material-icons circle">folder</i>
-                            <span class="title">Title</span>
-                            <p>First Line <br> Second Line
-                            </p>
-                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                        </li>
-                        <li class="collection-item avatar">
-                            <i class="material-icons circle green">insert_chart</i>
-                            <span class="title">Title</span>
-                            <p>First Line <br> Second Line
-                            </p>
-                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                        </li>
-                        <li class="collection-item avatar">
-                            <i class="material-icons circle red">play_arrow</i>
-                            <span class="title">Title</span>
-                            <p>First Line <br> Second Line
-                            </p>
-                            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                        </li>
+                <div id="wins" class="col s12">
+                    <ul class="collection" id="winList">
                     </ul>
 
                 </div>
-                <div id="test2" class="col s12">
-                    <ul class="collection">
-                        <li class="collection-item avatar">
-                            <img src="" " alt=" " class="circle ">
-                            <span class="title ">Title</span>
-                            <p>First Line <br> Second Line
-                            </p>
-                            <a href="#! " class="secondary-content "><i class="material-icons ">grade</i></a>
-                        </li>
-                        <li class="collection-item avatar ">
-                            <i class="material-icons circle ">folder</i>
-                            <span class="title ">Title</span>
-                            <p>First Line <br> Second Line
-                            </p>
-                            <a href="#! " class="secondary-content "><i class="material-icons ">grade</i></a>
-                        </li>
-                        <li class="collection-item avatar ">
-                            <i class="material-icons circle green ">insert_chart</i>
-                            <span class="title ">Title</span>
-                            <p>First Line <br> Second Line
-                            </p>
-                            <a href="#! " class="secondary-content "><i class="material-icons ">grade</i></a>
-                        </li>
-                        <li class="collection-item avatar ">
-                            <i class="material-icons circle red ">play_arrow</i>
-                            <span class="title ">Title</span>
-                            <p>First Line <br> Second Line
-                            </p>
-                            <a href="#! " class="secondary-content "><i class="material-icons ">grade</i></a>
-                        </li>
+                <div id="deaths" class="col s12">
+                    <ul class="collection" id="deathList">
                     </ul>
                 </div>
-
             </div>
-            <!--<h4>Modal Header</h4>-->
-            <!--<p>A bunch of text</p>-->
         </div>
     </div>
 

@@ -4,6 +4,9 @@
 .icon-block .material-icons {
 	font-size: inherit;
 }
+#player-form{
+  margin-left: 15px;
+}
 
 body{
   background: url(http://wallpapercave.com/wp/4swVVL8.jpg) 0 / cover fixed;
@@ -21,7 +24,10 @@ body{
 #item-card {
   height: 400px;
 }
-
+#hall-button {
+  margin-top: 10px;
+  margin-right: 15px;
+}
 #item-image {
   height: 250px;
 }

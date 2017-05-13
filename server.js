@@ -27,6 +27,9 @@ require("./app/routes/player-api-routes.js")(app);
 require("./app/routes/card-api-routes.js")(app);
 require("./app/routes/doors-routes.js")(app);
 require("./app/routes/treasure-routes.js")(app);
+require("./app/routes/hall-win-routes.js")(app);
+require("./app/routes/hall-death-routes.js")(app);
+
 
 // Syncing our sequelize models and then starting our express app
 db.sequelize.sync({ force: true }).then(function () {

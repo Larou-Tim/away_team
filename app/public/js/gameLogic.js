@@ -12,6 +12,14 @@ $(document).ready(function () {
   var selectedPlayerID;
   var selectedPlayerEffectiveLevel;
 
+  var playerTrack = {
+    name: "",
+    level: 1,
+    effectiveLevel: 1,
+    turn: 0,
+    lastEnemy: ""
+  }
+
   //used to determine if item should be a post/put
   var playerCurrentItems = {
     Weapon: false,
@@ -34,6 +42,8 @@ $(document).ready(function () {
   $(document).on("click", "#runaway", handleRun)
   // only choice for when a curse shows up
   $(document).on("click", "#resolve", handleCurse);
+  $(document).on("click", "#hall-button", updateModal);
+
 
   // Cards in hand constructor
   function getItemCard(cards) {
@@ -158,6 +168,8 @@ $(document).ready(function () {
     // if curse only add resolve button
     // test fields seem to change slighting on curses, so look into that
     // resulve card will call function resolveCurse and then reset the the away card 
+    playerTrack.turn++
+    console.log(playerTrack);
 
     $.get("/api/door/", function (data) {
 
@@ -314,6 +326,7 @@ $(document).ready(function () {
       playerLevel = data[0].effectiveLevel;
       $.get("/api/doors/" + doorCard, function (data) {
         enemyLevel = data[0].level;
+        playerTrack.lastEnemy = data[0].name;
         reward = data[0].treasure;
         if (playerLevel > enemyLevel) {
           var rewardText;
@@ -340,6 +353,8 @@ $(document).ready(function () {
   }
 
   function handleLoss() {
+
+    handleHallLoss()
 
     $.ajax({
       method: "DELETE",
@@ -384,6 +399,7 @@ $(document).ready(function () {
       }
 
       if (playerCurrentLevel > 9) {
+        handleHallWin();
         Materialize.toast("You've won!", 4000);
         Materialize.toast("Can you do it again?", 4500);
       }
@@ -411,7 +427,6 @@ $(document).ready(function () {
       resetAwayCard();
     });
   }
-
 
   function handleItemCard() {
 
@@ -499,6 +514,8 @@ $(document).ready(function () {
         }
 
         var totalBonus = bonus.level + bonus.Armor + bonus.Weapon + bonus.Ship + bonus.Helper;
+        playerTrack.level = bonus.level;
+        playerTrack.effectiveLevel = bonus.Armor + bonus.Weapon + bonus.Ship + bonus.Helper;
         $("#totalBonus").text(totalBonus)
         updateEffectiveLevel(totalBonus);
       });
@@ -529,11 +546,12 @@ $(document).ready(function () {
   // A function to handle what happens when the form is submitted to create a new Player
   function handleNewPlayer(event) {
     event.preventDefault();
-    console.log('New Palyer')
+
     // Don't do anything if the name fields hasn't been filled out
     if (!nameInput.val().trim().trim()) {
       return;
     }
+    playerTrack.name = nameInput.val().trim().trim()
     // Calling the upsertAuthor function and passing in the value of the name input
     upsertPlayer({
       name: nameInput
@@ -548,11 +566,9 @@ $(document).ready(function () {
 
   // A function for creating an author. Calls getAuthors upon completion
   function upsertPlayer(playerData) {
-    console.log('newplayer in', playerData)
     $.post("/api/players", playerData, function (data) {
 
       selectedPlayerID = data.id
-      console.log("New PlayerID", selectedPlayerID)
 
     }).then(function () {
       drawNCards(4);
@@ -622,6 +638,62 @@ $(document).ready(function () {
       }
 
     }).done(updateHand);
+  }
+
+  function handleHallWin() {
+
+
+    $.post("/api/hallwin", playerTrack, function (data) {
+      console.log(data)
+
+
+    })
+  }
+
+  function handleHallLoss() {
+    $.post("/api/halldeath", playerTrack, function (data) {
+      console.log(data)
+
+
+    })
+  }
+
+  function updateModal() {
+    $.get("/api/hallwin/", function (winData) {
+      $.get("/api/halldeath/", function (deathData) {
+
+        for (var i in winData) {
+          var newList = $("<li>");
+          newList.attr("class", "collection-item");
+          var listTitle = $("<span>");
+          listTitle.attr("class", "title");
+          listTitle.text(winData[i].name);
+          var listContent = $("<p>");
+          listContent.text("Won in " + winData[i].turn + " turns! By defeating " + winData[i].lastEnemy +
+            " <br > " + winData[i].name + " had a total level of " + winData[i].effectiveLevel + ". Congrats!")
+          newList.append(listTitle);
+          newList.append(listContent);
+          $("#winList").append(newList);
+
+        }
+
+        for (var i in deathData) {
+          var newList = $("<li>");
+          newList.attr("class", "collection-item");
+          var listTitle = $("<span>");
+          listTitle.attr("class", "title");
+          listTitle.text(deathData[i].name);
+          var listContent = $("<p>");
+          listContent.text("Died in " + deathData[i].turn + " turns, and was defeated by " + deathData[i].lastEnemy +
+            " <br > " + deathData[i].name + " was only level " +deathData[i].level + " at the time of death and had a total bonus of " + 
+            deathData[i].effectiveLevel + ". Better luck next time!")
+          newList.append(listTitle);
+          newList.append(listContent);
+          $("#deathList").append(newList);
+        }
+
+      });
+    });
   }
 
 });
