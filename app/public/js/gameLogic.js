@@ -1,10 +1,3 @@
-//spit player - api - routes
-
-//hall of heros display all dead people, what they had, and what they died to.
-// will use a modal pop up to display the winners and losers
-// will make tables before the records are destroyed from the player DB
-
-
 $(document).ready(function () {
   $('.modal').modal()
   var nameInput = $("#player-name");
@@ -166,10 +159,6 @@ $(document).ready(function () {
   function handleAwayMission() {
 
     if (selectedPlayerID > 1) {
-      // add if stmt to determine if its a monster /curse
-      // if curse only add resolve button
-      // test fields seem to change slighting on curses, so look into that
-      // resulve card will call function resolveCurse and then reset the the away card 
       playerTrack.turn++
 
 
@@ -543,11 +532,6 @@ $(document).ready(function () {
     })
   }
 
-  //---------- needs update call if no item in slot
-  //handle to display the items a player has out
-  //calls api to get items associated with that player
-
-
   // A function to handle what happens when the form is submitted to create a new Player
   function handleNewPlayer(event) {
     event.preventDefault();
@@ -649,17 +633,11 @@ $(document).ready(function () {
 
 
     $.post("/api/hallwin", playerTrack, function (data) {
-
-
-
     })
   }
 
   function handleHallLoss() {
     $.post("/api/halldeath", playerTrack, function (data) {
-
-
-
     })
   }
 
