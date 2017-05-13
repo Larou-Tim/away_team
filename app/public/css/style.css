@@ -74,14 +74,14 @@ body{
 }
 
 #item-card {
-  height: 500px;
+  height: 400px;
 }
 #hall-button {
   margin-top: 10px;
   margin-right: 15px;
 }
 #item-image {
-  height: 280px;
+  height: 200px;
   width:100%;
 }
 
@@ -121,3 +121,6 @@ color: #c5cae9;
  margin-bottom: 40px;
 }
 
+#itemTab{
+  font-size: 12px;
+}

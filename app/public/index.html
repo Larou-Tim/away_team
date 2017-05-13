@@ -1,92 +1,95 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <title>Away Team</title>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"
-        />
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-            crossorigin="anonymous"></script>
-        <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"
-        />
-        <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
-    </head>
+<head>
+    <title>Away Team</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+</head>
 
-    <body>
-<div class = "video-container">
+<body>
+    <div class="video-container">
         <video playsinline autoplay loop muted poster="images/space.png" id="bgvid">
             <source src="images/space.mp4" type="video/mp4" alt="images/space.png">
-        </video></div>
-        <nav>
-            <div class="nav-wrapper indigo darken-1">
-                <!-- Element Showed -->
-                <a id="menu" class="waves-effect waves-light btn btn-floating fied-action-btn red accent-4 left"
-                    id="instructions-button" onclick=" $('.tap-target').tapTarget('open')"><i class="material-icons">info_outline</i></a>
+        </video>
+    </div>
+    <nav>
+        <div class="nav-wrapper indigo darken-1">
+            <!-- Element Showed -->
+            <a id="menu" class="waves-effect waves-light btn btn-floating fied-action-btn red accent-4 left" id="instructions-button"
+                onclick=" $('.tap-target').tapTarget('open')"><i class="material-icons">info_outline</i></a>
 
-                <!-- Tap Target Structure -->
-                <div class="tap-target red accent-4" data-activates="menu">
-                    <div class="tap-target-content indigo darken-1" id="instructions">
-                        <h5>Game Instructions!</h5>
-                        <ol>
-                            <li>Start by creating a character name. Upon entering, you will
-                                be given 5 random cards to start</li>
-                            <br>
-                            <li>You will be allowed to use one card from each class to help
-                                boost your skills.</li>
-                            <br>
-                            <li>Press the plane button on the Away Mission Card to start the game.</li>
-                            <br>
-                            <li>Beat the "Monsters" by clicking on the orange button and having a higher skill level than them.
-                                If you are equal or less than them, you have to try to
-                                run away by clicking the pink button. If you fail at
-                                running away, you die. Refresh the page to start again.</li>
-                            <br>
-                            <li>Beat 10 "Monsters" to win!</li>
-                        </ol>
-                    </div>
+            <!-- Tap Target Structure -->
+            <div class="tap-target red accent-4" data-activates="menu">
+                <div class="tap-target-content indigo darken-1" id="instructions">
+                    <h5>Game Instructions!</h5>
+                    <ol>
+                        <li>Start by creating a character name. Upon entering, you will be given 5 random cards to start</li>
+                        <br>
+                        <li>You will be allowed to use one card from each class to help boost your skills.</li>
+                        <br>
+                        <li>Press the plane button on the Away Mission Card to start the game.</li>
+                        <br>
+                        <li>Beat the "Monsters" by clicking on the orange button and having a higher skill level than them. If
+                            you are equal or less than them, you have to try to run away by clicking the pink button. If
+                            you fail at running away, you die. Refresh the page to start again.</li>
+                        <br>
+                        <li>Beat 10 "Monsters" to win!</li>
+                    </ol>
                 </div>
-                <form class="left" id="player-form">
-
-                    <div class="input-field col s6">
-                        <i class="material-icons prefix">insert_emoticon</i>
-                        <input id="player-name" type="text" class="validate">
-                        <label for="player-name white">Player Name</label>
-                        </div>
-
-                </form>
-                <a href="#" class="brand-logo center">Away Team</a>
-                <!-- Modal Trigger -->
-                <a class="waves-effect waves-light btn red accent-4 right" href="#hall" id="hall-button">Hall Of Heroes</a>
-
             </div>
-        </nav>
+            <form class="left" id="player-form">
+
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">insert_emoticon</i>
+                    <input id="player-name" type="text" class="validate">
+                    <label for="player-name white">Player Name</label>
+                </div>
+
+            </form>
+            <a href="#" class="brand-logo center">Away Team</a>
+            <!-- Modal Trigger -->
+            <a class="waves-effect waves-light btn red accent-4 right" href="#hall" id="hall-button">Hall Of Heroes</a>
+
+        </div>
+    </nav>
 
 
-        
-        <div class="row"></div>
-<div class="container" id="battleStation">
+
+    <div class="row"></div>
+    <div class="container" id="battleStation">
         <div class="row">
             <div class="col s6 m6 l6">
-                <div class="card large">
+                <div class="card">
                     <div class="card-content grey lighten-3">
                         <p>Your Current Level is + <span id="currentLevel">1</span></p>
                         <p>Your Total Bonus is + <span id="totalBonus">1</span></p>
                     </div>
                     <div class="card-tabs grey lighten-3">
                         <ul class="tabs tabs-fixed-width">
-                            <li class="tab"><a href="#weaponOut">Weapon</a></li>
-                            <li class="tab"><a class="active" href="#armorOut">Armor</a></li>
-                            <li class="tab"><a href="#helperOut">Helper</a></li>
-                            <li class="tab"><a href="#shipOut">Ship</a></li>
+                            <li class="tab" ><a href="#weaponOut" id="itemTab">Weapon</a></li>
+                            <li class="tab" ><a class="active" href="#armorOut" id="itemTab">Armor</a></li>
+                            <li class="tab" ><a href="#helperOut" id="itemTab">Helper</a></li>
+                            <li class="tab" ><a href="#shipOut" id="itemTab">Ship</a></li>
                         </ul>
                     </div>
                     <div class="card-content grey lighten-3">
-                        <div id="weaponOut">You don't have a Weapon</div>
-                        
-                        <div id="armorOut">You don't have any Armor</div>
-                        <div id="helperOut">You don't have a Helper</div>
-                        <div id="shipOut">You don't have a Ship</div>
+                        <div id="weaponOut">You don't have a Weapon
+                 
+                        </div>
+                        <div id="armorOut">You don't have any Armor
+      
+                        </div>
+                        <div id="helperOut">You don't have a Helper
+       
+                        </div>
+                        <div id="shipOut">You don't have a Ship
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -103,41 +106,41 @@
                     </div>
                 </div>
             </div>
-           
+
         </div>
-</div>
-<div class="container" id="hand">
+    </div>
+    <div class="container" id="hand">
         <div class="row">
             <div id="playersHand">
             </div>
+        </div>
     </div>
-</div>        
 
 
 
-        <!-- Modal Structure -->
-        <div id="hall" class="modal bottom-sheet indigo darken-1">
-            <div class="modal-content">
-                <div class="row">
-                    <div class="col s12">
-                        <ul class="tabs">
-                            <li class="tab col s6"><a href="#wins">Winners</a></li>
-                            <li class="tab col s6"><a class="active" href="#deaths">Losers</a></li>
+    <!-- Modal Structure -->
+    <div id="hall" class="modal bottom-sheet indigo darken-1">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs">
+                        <li class="tab col s6"><a href="#wins">Winners</a></li>
+                        <li class="tab col s6"><a class="active" href="#deaths">Losers</a></li>
 
-                        </ul>
-                    </div>
-                    <div id="wins" class="col s12">
-                        <ul class="collection" id="winList">
-                        </ul>
+                    </ul>
+                </div>
+                <div id="wins" class="col s12">
+                    <ul class="collection" id="winList">
+                    </ul>
 
-                    </div>
-                    <div id="deaths" class="col s12">
-                        <ul class="collection" id="deathList">
-                        </ul>
-                    </div>
+                </div>
+                <div id="deaths" class="col s12">
+                    <ul class="collection" id="deathList">
+                    </ul>
                 </div>
             </div>
         </div>
+    </div>
 
 
 
@@ -148,13 +151,13 @@
 
 
 
-        <!--Import jQuery before materialize.js-->
-        <script type="text/javascript " src="https://code.jquery.com/jquery-2.1.1.min.js "></script>
-        <script type="text/javascript " src="js/materialize.min.js "></script>
-        <script type="text/javascript " src="js/gameLogic.js "></script>
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript " src="https://code.jquery.com/jquery-2.1.1.min.js "></script>
+    <script type="text/javascript " src="js/materialize.min.js "></script>
+    <script type="text/javascript " src="js/gameLogic.js "></script>
 
 
-</video>
-    </body>
+    </video>
+</body>
 
 </html>

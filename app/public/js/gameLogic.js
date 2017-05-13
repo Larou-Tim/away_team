@@ -134,18 +134,25 @@ $(document).ready(function () {
           }
 
           $("#" + selectedItemSpot + "Out").text("You have a " + data[i].Item.name + ". This gives you +" + data[i].Item.bonus);
+          // var newImage = $("<img>");
+          // newImage.attr("src", "images/"+ data[i].Item.image);
+          // $("#"+selectedItemSpot+"-image").append(newImage);
 
           if (!playerCurrentItems.Weapon) {
             $("#weaponOut").text("You don't have a weapon.");
+            // $("#weapon-image").empty()
           }
           if (!playerCurrentItems.Armor) {
             $("#armorOut").text("You don't have armor.");
+            // $("#armor-image").empty()
           }
           if (!playerCurrentItems.Ship) {
             $("#shipOut").text("You don't have a ship.");
+            // $("#ship-image").empty()
           }
           if (!playerCurrentItems.Helper) {
             $("#helperOut").text("You don't have a helper.");
+            // $("#helper-image").empty()
           }
 
         }
@@ -664,8 +671,6 @@ $(document).ready(function () {
 
   function updateModal() {
     //force an update somewhere
-    updateHand();
-    updateItems();
 
     $.get("/api/hallwin/", function (winData) {
       $.get("/api/halldeath/", function (deathData) {
