@@ -17,7 +17,7 @@ module.exports = function (sequelize, DataTypes) {
             classMethods: {
 
                 associate: function (models) {
-                    Player.belongsToMany(models.Item, { through: models.PlayerHand });
+                    Player.hasMany(models.PlayerHand, {unique: false});
                     Player.belongsToMany(models.Item, { through: models.PlayerItem });
                 }
             }

@@ -40,7 +40,6 @@ $(document).ready(function () {
 
   // Cards in hand constructor
   function getItemCard(cards) {
-    $("#playersHand").empty()
     if (cards.length) {
       for (var i in cards) {
         $.get("/api/items/" + cards[i].ItemId, function (data) {
@@ -160,7 +159,7 @@ $(document).ready(function () {
 
     if (selectedPlayerID > 1) {
       playerTrack.turn++
-      updateHand();
+
 
       $.get("/api/door/", function (data) {
 
@@ -254,7 +253,7 @@ $(document).ready(function () {
             $.ajax({
               method: "DELETE",
               url: "/api/playerItems/" + deletedItemId + "/" + selectedPlayerID
-            }).done(function (x) {
+            }).done(function () {
 
               updateHand();
               updateItems();
@@ -578,7 +577,7 @@ $(document).ready(function () {
       PlayerId: parseInt(selectedPlayerID)
     };
     $.post("/api/playerHand/", newCard, function () {
-    });
+    })
   }
 
   function updateHand() {
@@ -633,7 +632,7 @@ $(document).ready(function () {
         addToPlayerHand(data[i].id);
       }
 
-    }).done(updateHand);
+    }).then(updateHand);
   }
 
   function handleHallWin() {

@@ -9,6 +9,12 @@ module.exports = function (app) {
             res.json(dbItem);
         });
     });
+     app.get("/api/items/", function (req, res) {
+        db.Item.findAll({  }).then(function (dbItem) {
+            // console.log(dbItem);
+            res.json(dbItem);
+        });
+    });
 
 };
 
