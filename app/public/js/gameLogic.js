@@ -164,57 +164,62 @@ $(document).ready(function () {
   //constructor to update the away mission
   function handleAwayMission() {
 
-    // add if stmt to determine if its a monster /curse
-    // if curse only add resolve button
-    // test fields seem to change slighting on curses, so look into that
-    // resulve card will call function resolveCurse and then reset the the away card 
-    playerTrack.turn++
-    console.log(playerTrack);
+    if (selectedPlayerID > 1) {
+      // add if stmt to determine if its a monster /curse
+      // if curse only add resolve button
+      // test fields seem to change slighting on curses, so look into that
+      // resulve card will call function resolveCurse and then reset the the away card 
+      playerTrack.turn++
+      console.log(playerTrack);
 
-    $.get("/api/door/", function (data) {
+      $.get("/api/door/", function (data) {
 
-      if (data[0].type == 'curse') {
-        var newFabResolve = $("<a>");
-        newFabResolve.attr("class", "btn-floating halfway-fab waves-effect waves-light pink");
-        newFabResolve.attr("id", "resolve");
-        var newFabResolveIcon = $("<i>");
-        newFabResolveIcon.attr("class", "material-icons");
-        newFabResolveIcon.text("visibility");
-        newFabResolve.append(newFabResolveIcon);
-        newFabResolve.attr("doorCard", data[0].id);
-        $("#awayMissionInner").append(newFabResolve);
-        $("#away-title").text(data[0].name)
+        if (data[0].type == 'curse') {
+          var newFabResolve = $("<a>");
+          newFabResolve.attr("class", "btn-floating halfway-fab waves-effect waves-light pink");
+          newFabResolve.attr("id", "resolve");
+          var newFabResolveIcon = $("<i>");
+          newFabResolveIcon.attr("class", "material-icons");
+          newFabResolveIcon.text("visibility");
+          newFabResolve.append(newFabResolveIcon);
+          newFabResolve.attr("doorCard", data[0].id);
+          $("#awayMissionInner").append(newFabResolve);
+          $("#away-title").text(data[0].name)
 
-      }
-      else {
-        var newFabFight = $("<a>");
-        newFabFight.attr("class", "btn-floating halfway-fab waves-effect waves-light green");
-        newFabFight.attr("id", "fight");
-        var newFabFightIcon = $("<i>");
-        newFabFightIcon.attr("class", "material-icons");
-        newFabFightIcon.text("my_location");
-        newFabFight.attr("doorCard", data[0].id);
-        newFabFight.append(newFabFightIcon);
-        $("#awayMissionInner").append(newFabFight);
+        }
+        else {
+          var newFabFight = $("<a>");
+          newFabFight.attr("class", "btn-floating halfway-fab waves-effect waves-light green");
+          newFabFight.attr("id", "fight");
+          var newFabFightIcon = $("<i>");
+          newFabFightIcon.attr("class", "material-icons");
+          newFabFightIcon.text("my_location");
+          newFabFight.attr("doorCard", data[0].id);
+          newFabFight.append(newFabFightIcon);
+          $("#awayMissionInner").append(newFabFight);
 
-        var newFabRun = $("<a>");
-        newFabRun.attr("class", "btn-floating halfway-fab waves-effect waves-light orange");
-        newFabRun.attr("id", "runaway");
-        var newFabRunIcon = $("<i>");
-        newFabRunIcon.attr("class", "material-icons");
-        newFabRunIcon.text("call_missed");
-        newFabRun.attr("doorCard", data[0].id);
-        $("#away-title").text(data[0].name + " Level " + data[0].level)
+          var newFabRun = $("<a>");
+          newFabRun.attr("class", "btn-floating halfway-fab waves-effect waves-light orange");
+          newFabRun.attr("id", "runaway");
+          var newFabRunIcon = $("<i>");
+          newFabRunIcon.attr("class", "material-icons");
+          newFabRunIcon.text("call_missed");
+          newFabRun.attr("doorCard", data[0].id);
+          $("#away-title").text(data[0].name + " Level " + data[0].level)
 
-        newFabRun.append(newFabRunIcon);
-        $("#awayMissionInner").append(newFabRun);
-      }
+          newFabRun.append(newFabRunIcon);
+          $("#awayMissionInner").append(newFabRun);
+        }
 
-      $("#awayContent").text(data[0].description);
-      $("#awayMission").remove();
-      $("#door-image").attr("src", "images/" + data[0].image)
+        $("#awayContent").text(data[0].description);
+        $("#awayMission").remove();
+        $("#door-image").attr("src", "images/" + data[0].image)
 
-    });
+      });
+    }
+    else{
+      Materialize.toast('You need to make a character!', 4000);
+    }
   }
 
   //handle when a player clicks on the curse button
@@ -247,7 +252,6 @@ $(document).ready(function () {
                 playerCurrentItems.Helper = true;
                 break;
               case "Ship":
-
                 playerCurrentItems.Ship = true;
                 break;
             }
@@ -269,7 +273,7 @@ $(document).ready(function () {
           }
           else {
             if (curseItemSpot == 'Armor') {
-              Materialize.toast("Lucky! You didn't have any" + curseItemSpot + '!', 4000);
+              Materialize.toast("Lucky! You didn't have any " + curseItemSpot + '!', 4000);
             }
             else {
               Materialize.toast("Lucky! You didn't have a " + curseItemSpot + '!', 4000);
@@ -402,6 +406,7 @@ $(document).ready(function () {
         handleHallWin();
         Materialize.toast("You've won!", 4000);
         Materialize.toast("Can you do it again?", 4500);
+        resetPage();
       }
 
 
@@ -520,7 +525,6 @@ $(document).ready(function () {
         updateEffectiveLevel(totalBonus);
       });
     });
-
 
   }
 
@@ -669,8 +673,8 @@ $(document).ready(function () {
           listTitle.attr("class", "title");
           listTitle.text(winData[i].name);
           var listContent = $("<p>");
-          listContent.text("Won in " + winData[i].turn + " turns! By defeating " + winData[i].lastEnemy +
-            " <br > " + winData[i].name + " had a total level of " + winData[i].effectiveLevel + ". Congrats!")
+          listContent.html("Won in " + winData[i].turn + " turns! By defeating " + winData[i].lastEnemy + "." +
+            " <br/> " + winData[i].name + " had a total level of " + winData[i].effectiveLevel + ". Congrats!")
           newList.append(listTitle);
           newList.append(listContent);
           $("#winList").append(newList);
@@ -684,8 +688,8 @@ $(document).ready(function () {
           listTitle.attr("class", "title");
           listTitle.text(deathData[i].name);
           var listContent = $("<p>");
-          listContent.text("Died in " + deathData[i].turn + " turns, and was defeated by " + deathData[i].lastEnemy +
-            " <br > " + deathData[i].name + " was only level " + deathData[i].level + " at the time of death and had a total bonus of " +
+          listContent.html("Died in " + deathData[i].turn + " turns, and was defeated by " + deathData[i].lastEnemy + "." +
+            " <br/> " + deathData[i].name + " was only level " + deathData[i].level + " at the time of death and had a total bonus of " +
             deathData[i].effectiveLevel + ". Better luck next time!")
           newList.append(listTitle);
           newList.append(listContent);
