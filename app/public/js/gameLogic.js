@@ -661,7 +661,7 @@ $(document).ready(function () {
   function updateModal() {
     $.get("/api/hallwin/", function (winData) {
       $.get("/api/halldeath/", function (deathData) {
-
+        $("#winList").empty()
         for (var i in winData) {
           var newList = $("<li>");
           newList.attr("class", "collection-item");
@@ -676,7 +676,7 @@ $(document).ready(function () {
           $("#winList").append(newList);
 
         }
-
+        $("#deathList").empty()
         for (var i in deathData) {
           var newList = $("<li>");
           newList.attr("class", "collection-item");
@@ -685,7 +685,7 @@ $(document).ready(function () {
           listTitle.text(deathData[i].name);
           var listContent = $("<p>");
           listContent.text("Died in " + deathData[i].turn + " turns, and was defeated by " + deathData[i].lastEnemy +
-            " <br > " + deathData[i].name + " was only level " +deathData[i].level + " at the time of death and had a total bonus of " + 
+            " <br > " + deathData[i].name + " was only level " + deathData[i].level + " at the time of death and had a total bonus of " +
             deathData[i].effectiveLevel + ". Better luck next time!")
           newList.append(listTitle);
           newList.append(listContent);
