@@ -1,10 +1,3 @@
-// 
-// update rikers beard img
-
-//Error: Only on card play does it correctly refresh playersHand
-//issue on death game requires refresh to continue (maybe just force refresh?)
-//should i do front end or should i do hall of heros?
-
 //spit player - api - routes
 
 //hall of heros display all dead people, what they had, and what they died to.
@@ -136,20 +129,19 @@ $(document).ready(function () {
               break;
           }
 
-
           $("#" + selectedItemSpot + "Out").text("You have a " + data[i].Item.name + ". This gives you +" + data[i].Item.bonus);
 
-          if(!playerCurrentItems.Weapon) {
-             $("#weaponOut").text("You don't have a weapon.");
+          if (!playerCurrentItems.Weapon) {
+            $("#weaponOut").text("You don't have a weapon.");
           }
-          if(!playerCurrentItems.Armor) {
-             $("#armorOut").text("You don't have armor.");
+          if (!playerCurrentItems.Armor) {
+            $("#armorOut").text("You don't have armor.");
           }
-          if(!playerCurrentItems.Ship) {
-             $("#shipOut").text("You don't have a ship.");
+          if (!playerCurrentItems.Ship) {
+            $("#shipOut").text("You don't have a ship.");
           }
-          if(!playerCurrentItems.Helper) {
-             $("#helperOut").text("You don't have a helper.");
+          if (!playerCurrentItems.Helper) {
+            $("#helperOut").text("You don't have a helper.");
           }
 
         }
@@ -219,28 +211,63 @@ $(document).ready(function () {
      and removing the one that corresponds to the curse category */
 
     if (curse.effect == "remove") {
-
+      //if its remove, check the player's items to see if they have one
       $.get("/api/playerItems/" + selectedPlayerID, function (data) {
+        //reset var for use
+        playerCurrentItems = {
+          Weapon: false,
+          Armor: false,
+          Ship: false,
+          Aide: false
+        }
 
-        for (var i in data) {
-          if (data[i].Item.spot == curse.category) {
+        if (data) {
+          for (var i in data) {
 
+            switch (data[i].Item.spot) {
+              case "Weapon":
+                playerCurrentItems.Weapon = true;
+                break;
+              case "Armor":
+                playerCurrentItems.Armor = true;
+                break;
+              case "Helper":
+                playerCurrentItems.Helper = true;
+                break;
+              case "Ship":
+
+                playerCurrentItems.Ship = true;
+                break;
+            }
+          }
+          var curseItemSpot = curse.category;
+          //if the player has that item then delete it
+          if (playerCurrentItems[curseItemSpot]) {
+            Materialize.toast('You lost your ' + curseItemSpot + '!', 4000);
             var deletedItemId = data[i].Item.id;
-            console.log("removing item", deletedItemId, " because it is", data[i].Item.spot)
             $.ajax({
               method: "DELETE",
               url: "/api/playerItems/" + deletedItemId + "/" + selectedPlayerID
             }).done(function () {
 
-              $("#playersHand").empty();
               updateHand();
               updateItems();
               resetAwayCard();
             });
           }
           else {
+            if (curseItemSpot == 'Armor') {
+              Materialize.toast("Lucky! You didn't have any" + curseItemSpot + '!', 4000);
+            }
+            else {
+              Materialize.toast("Lucky! You didn't have a " + curseItemSpot + '!', 4000);
+            }
+
+            updateHand();
+            updateItems();
             resetAwayCard();
           }
+
         }
       });
 
@@ -329,6 +356,8 @@ $(document).ready(function () {
 
   function resetPage() {
     resetAwayCard();
+    $("#player-name").text("");
+    selectedPlayerID = "";
     $("#playersHand").empty();
     $("#totalBonus").text("1");
     $("#weaponOut").text("You don't have any weapons");
@@ -356,6 +385,7 @@ $(document).ready(function () {
 
       if (playerCurrentLevel > 9) {
         Materialize.toast("You've won!", 4000);
+        Materialize.toast("Can you do it again?", 4500);
       }
 
 
@@ -499,6 +529,7 @@ $(document).ready(function () {
   // A function to handle what happens when the form is submitted to create a new Player
   function handleNewPlayer(event) {
     event.preventDefault();
+    console.log('New Palyer')
     // Don't do anything if the name fields hasn't been filled out
     if (!nameInput.val().trim().trim()) {
       return;
@@ -517,17 +548,17 @@ $(document).ready(function () {
 
   // A function for creating an author. Calls getAuthors upon completion
   function upsertPlayer(playerData) {
-
+    console.log('newplayer in', playerData)
     $.post("/api/players", playerData, function (data) {
 
       selectedPlayerID = data.id
+      console.log("New PlayerID", selectedPlayerID)
 
     }).then(function () {
       drawNCards(4);
     });
 
   }
-
 
   function addToPlayerHand(cardID) {
     var newCard = {
@@ -539,7 +570,6 @@ $(document).ready(function () {
   }
 
   function updateHand() {
-    console.log("Update is called")
     $("#playersHand").empty();
     $.get("/api/playerHand/" + selectedPlayerID, function (data) {
       getItemCard(data)
