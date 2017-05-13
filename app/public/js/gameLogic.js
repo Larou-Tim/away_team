@@ -356,6 +356,7 @@ $(document).ready(function () {
 
     resetPage();
     Materialize.toast("You're Dead", 4000);
+
     //display death
 
 
@@ -373,13 +374,13 @@ $(document).ready(function () {
     }
     $("#player-name").text("");
     selectedPlayerID = "";
-    $("#playersHand").empty();
+
     $("#totalBonus").text("1");
     $("#weaponOut").text("You don't have any weapons");
     $("#armorOut").text("You don't have any armor");
     $("#helperOut").text("You don't have a helper");
     $("#shipOut").text("You don't have a ship");
-
+    $("#playersHand").empty();
   }
 
   /* updates the players level for winning a fight or getting it witha curse this will not allow a player to drop below level 1, curses will not 'kill' a player */
@@ -577,6 +578,7 @@ $(document).ready(function () {
       PlayerId: parseInt(selectedPlayerID)
     };
     $.post("/api/playerHand/", newCard, function () {
+
     })
   }
 
@@ -624,6 +626,7 @@ $(document).ready(function () {
 
   // function to drawn a random card from the api
   function drawNCards(n) {
+
     $.get("/api/treasure/" + n, function (data) {
 
       for (var i = 0; i < data.length; i++) {
@@ -632,7 +635,12 @@ $(document).ready(function () {
         addToPlayerHand(data[i].id);
       }
 
-    }).then(updateHand);
+    }).then(function () {
+      //added timeout because callbacks were not working correctly
+      setTimeout(function () {
+        updateHand();
+      }, 50);
+    });
   }
 
   function handleHallWin() {
